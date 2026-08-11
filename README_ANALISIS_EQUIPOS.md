@@ -9,7 +9,7 @@ La parrilla de F1 tenia un salto demasiado brusco:
 
 Eso hacia que casi todos los equipos no top se sintieran iguales y que el mercado pasara de "auto bajo" a "auto campeon" sin una etapa real de media tabla.
 
-## Nueva filosofia
+## Nueva filosofía
 
 F1 queda dividida en tres grupos:
 

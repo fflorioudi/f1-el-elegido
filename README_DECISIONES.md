@@ -887,7 +887,7 @@ Minijuego: ers.
 - Opcion 1: Cerrar interior. Opcion estable con premio moderado. Impacto: stats {"racecraft":2,"pace":1}; temporada {"race":3,"volatility":2}.
 - Opcion 2: Abrir salida. Camino tecnico y consistente. Impacto: stats {"tyre":2,"focus":1}; temporada {"tyreCare":3,"consistency":1}.
 
-## Mitad de ano
+## Mitad de año
 
 ### 1. Mejora del auto
 

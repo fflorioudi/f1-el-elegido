@@ -110,7 +110,7 @@ button:disabled {
   text-transform: uppercase;
 }
 
-.nav-pills span,
+.nav-pills button,
 .hero-metrics span {
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -119,6 +119,20 @@ button:disabled {
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 850;
+}
+
+.nav-pills button {
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.nav-pills button:hover,
+.nav-pills button.active {
+  border-color: rgba(67, 215, 255, 0.72);
+  background: rgba(67, 215, 255, 0.11);
+  color: var(--text);
+  transform: translateY(-1px);
 }
 
 .hero-metrics {
@@ -379,7 +393,7 @@ input[type="range"] {
   font-size: 1.35rem;
 }
 
-.trophy-grid {
+.trophy-showcase {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
@@ -413,29 +427,106 @@ input[type="range"] {
   font-size: 1.15rem;
 }
 
-.trophy-grid span {
+.trophy-cup-card {
+  position: relative;
   display: grid;
-  gap: 2px;
-  min-height: 54px;
-  padding: 8px;
+  grid-template-columns: 28px minmax(0, 1fr) minmax(1.35rem, auto);
+  align-items: center;
+  gap: 6px;
+  min-height: 50px;
+  padding: 7px 8px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #10151a;
 }
 
-.trophy-grid span.earned {
+.trophy-cup-card.earned {
   border-color: rgba(255, 209, 102, 0.58);
   background: linear-gradient(135deg, rgba(255, 209, 102, 0.14), rgba(255, 255, 255, 0.03));
 }
 
-.trophy-grid b {
-  color: var(--muted);
-  font-size: 0.72rem;
+.trophy-cup-card img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 8px rgba(255, 209, 102, 0.22));
+  opacity: 0.55;
 }
 
-.trophy-grid strong {
+.trophy-cup-card.earned img {
+  opacity: 1;
+}
+
+.trophy-cup-card.sprint img,
+.trophy-cup-card.constructor img {
+  transform: scale(1.12);
+}
+
+.trophy-cup-card b {
+  color: var(--muted);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.7rem;
+  line-height: 1.05;
+}
+
+.trophy-cup-card strong {
   color: var(--gold);
-  font-size: 1.1rem;
+  justify-self: end;
+  font-size: clamp(1rem, 2.6vw, 1.22rem);
+  line-height: 1;
+}
+
+.trophy-note {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.info-grid,
+.trophy-guide {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.info-card,
+.trophy-guide-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.info-card strong,
+.trophy-guide-card strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text);
+}
+
+.info-card span,
+.trophy-guide-card span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.trophy-guide-card {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.trophy-guide-card img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.38));
 }
 
 .license strong {
@@ -580,11 +671,16 @@ input[type="range"] {
 }
 
 .team-badge {
-  display: inline-flex;
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
-  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.team-badge strong {
+  min-width: 0;
 }
 
 .team-tier {
@@ -619,8 +715,8 @@ input[type="range"] {
 .logo {
   display: inline-grid;
   place-items: center;
-  width: 72px;
-  height: 48px;
+  width: 78px;
+  height: 52px;
   border: 2px solid color-mix(in srgb, var(--team), white 20%);
   border-radius: 8px;
   background:
@@ -635,11 +731,233 @@ input[type="range"] {
 
 .logo img {
   display: block;
+  width: calc(100% - 18px);
+  height: calc(100% - 16px);
+  object-fit: contain;
+  object-position: center;
+  padding: 0;
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+}
+
+.logo-dark {
+  background:
+    radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.13), transparent 45%),
+    linear-gradient(135deg, rgba(6, 12, 18, 0.96), rgba(17, 26, 36, 0.9));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.logo-light {
+  background:
+    radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.92), rgba(225, 231, 236, 0.72) 62%, rgba(180, 189, 198, 0.52));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+}
+
+.logo-native {
+  background:
+    radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.16), transparent 48%),
+    linear-gradient(135deg, rgba(10, 16, 22, 0.96), color-mix(in srgb, var(--team), #101820 72%));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.team-choice {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--team), white 18%);
+  background:
+    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--team), transparent 72%), transparent 15rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018)),
+    #20262d;
+}
+
+.team-choice::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--team);
+  opacity: 0.9;
+}
+
+.team-choice .team-badge {
+  grid-template-columns: 104px minmax(0, 1fr) auto;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.team-choice .team-badge strong {
+  overflow-wrap: anywhere;
+  line-height: 1.18;
+}
+
+.team-choice .logo {
+  width: 104px;
+  height: 68px;
+}
+
+.team-choice .logo img {
+  width: calc(100% - 26px);
+  height: calc(100% - 22px);
+}
+
+.team-choice .logo-light img,
+.team-choice .logo-native img {
+  width: calc(100% - 18px);
+  height: calc(100% - 18px);
+}
+
+.renewal-choice {
+  border-color: rgba(104, 227, 145, 0.62);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(104, 227, 145, 0.22), transparent 15rem),
+    linear-gradient(145deg, rgba(104, 227, 145, 0.095), rgba(255, 255, 255, 0.018)),
+    #20262d;
+}
+
+.renewal-choice::after {
+  content: "RENOVAR";
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  border: 1px solid rgba(104, 227, 145, 0.7);
+  border-radius: 999px;
+  padding: 0.22rem 0.48rem;
+  color: var(--ok);
+  font-size: 0.66rem;
+  font-weight: 950;
+}
+
+.celebration-board {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 209, 102, 0.26), transparent 18rem),
+    radial-gradient(circle at 18% 75%, rgba(255, 51, 79, 0.22), transparent 20rem),
+    radial-gradient(circle at 86% 72%, rgba(67, 215, 255, 0.2), transparent 22rem),
+    rgba(5, 8, 11, 0.92);
+  backdrop-filter: blur(12px);
+  animation: boardFade 220ms ease both;
+}
+
+.celebration-card {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: min(760px, 100%);
+  padding: clamp(28px, 6vw, 54px);
+  border: 1px solid rgba(255, 209, 102, 0.6);
+  border-radius: 8px;
+  text-align: center;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025)),
+    rgba(16, 21, 27, 0.94);
+  box-shadow: 0 28px 100px rgba(0, 0, 0, 0.48), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: trophyPop 520ms cubic-bezier(.2, .9, .2, 1.15) both;
+}
+
+.celebration-card h2 {
+  margin: 6px 0 10px;
+  font-size: clamp(2.2rem, 7vw, 5rem);
+  line-height: 0.95;
+  color: var(--gold);
+  text-shadow: 0 0 24px rgba(255, 209, 102, 0.28);
+}
+
+.celebration-card p {
+  max-width: 620px;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.celebration-cup {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 190px;
+  height: 190px;
+  margin-bottom: 16px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 209, 102, 0.34), transparent 64%);
+  box-shadow: 0 0 44px rgba(255, 209, 102, 0.4);
+  animation: cupGlow 1.8s ease-in-out infinite;
+}
+
+.celebration-cup img {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 4px;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.38));
+}
+
+.celebration-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0 24px;
+}
+
+.celebration-meta span {
+  border: 1px solid rgba(255, 209, 102, 0.45);
+  border-radius: 999px;
+  padding: 0.45rem 0.72rem;
+  color: var(--gold);
+  font-weight: 950;
+}
+
+.confetti-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.confetti-field i {
+  position: absolute;
+  left: var(--x);
+  top: -24px;
+  width: 10px;
+  height: 18px;
+  border-radius: 2px;
+  background: hsl(calc(var(--i) * 38), 88%, 62%);
+  animation: confettiFall 2.8s linear infinite;
+  animation-delay: var(--d);
+  transform: rotate(calc(var(--i) * 17deg));
+}
+
+@keyframes boardFade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes trophyPop {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+  }
+}
+
+@keyframes cupGlow {
+  50% {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 0 72px rgba(255, 209, 102, 0.58);
+  }
+}
+
+@keyframes confettiFall {
+  to {
+    top: calc(100% + 40px);
+    transform: translateX(calc((var(--i) - 14) * 3px)) rotate(calc(var(--i) * 42deg + 260deg));
+  }
 }
 
 .logo b {
@@ -1348,6 +1666,71 @@ input[type="range"] {
   margin-bottom: 10px;
 }
 
+.trophy-wall-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.trophy-wall-card {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 92px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.trophy-wall-card.earned {
+  border-color: rgba(255, 209, 102, 0.54);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 209, 102, 0.19), transparent 8rem),
+    rgba(255, 255, 255, 0.045);
+}
+
+.trophy-wall-card img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  opacity: 0.48;
+  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.32));
+}
+
+.trophy-wall-card.earned img {
+  opacity: 1;
+}
+
+.trophy-wall-card.sprint img {
+  transform: scale(1.18);
+}
+
+.trophy-wall-card.constructor img {
+  transform: scale(1.08);
+}
+
+.trophy-wall-card b,
+.trophy-wall-card small {
+  display: block;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.trophy-wall-card strong {
+  display: block;
+  color: var(--gold);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.trophy-wall-card small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
 .trophy-wall-section {
   margin-top: 10px;
 }
@@ -1364,10 +1747,11 @@ input[type="range"] {
   gap: 8px;
 }
 
-.trophy-wall span {
+.trophy-wall-section span {
   display: inline-flex;
   gap: 7px;
   align-items: center;
+  max-width: 100%;
   border: 1px solid rgba(255, 209, 102, 0.52);
   border-radius: 999px;
   padding: 0.42rem 0.68rem;
@@ -1375,9 +1759,11 @@ input[type="range"] {
   color: var(--text);
   font-size: 0.82rem;
   font-weight: 850;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
-.trophy-wall b {
+.trophy-wall-section b {
   color: var(--gold);
 }
 
@@ -1457,5 +1843,23 @@ input[type="range"] {
 
   .impact-strip {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .trophy-wall-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid,
+  .trophy-guide {
+    grid-template-columns: 1fr;
+  }
+
+  .team-badge {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .team-tier {
+    justify-self: start;
+    grid-column: 2;
   }
 }

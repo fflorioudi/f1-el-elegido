@@ -23,25 +23,40 @@ const PERSONALITIES = [
 const DRIVE_MODES = {
   safe: {
     name: "Conservador",
-    text: "Menos riesgo, mas consistencia, menor techo.",
-    risk: 0.72,
-    season: { consistency: 2, volatility: -1, race: -1 },
-    difficulty: -1
+    text: "Menos riesgo, mejor gestion, menor techo de sabado y ataque.",
+    risk: 0.76,
+    season: { consistency: 3, volatility: -2, tyreCare: 2, race: -1, qualy: -1 },
+    difficulty: -1,
+    ceiling: 0,
+    control: 1
   },
   balanced: {
     name: "Equilibrado",
-    text: "Riesgo y premio normales.",
+    text: "Riesgo sano, buen aprendizaje y pocos extremos.",
     risk: 1,
     season: {},
-    difficulty: 0
+    difficulty: 0,
+    ceiling: 0,
+    control: 0
   },
   attack: {
     name: "Agresivo",
-    text: "Mas techo, mas errores posibles.",
-    risk: 1.35,
-    season: { race: 2, qualy: 1, volatility: 2 },
-    difficulty: 1
+    text: "Mas techo de vuelta, mas desgaste, presion y errores caros.",
+    risk: 1.58,
+    season: { race: 2, qualy: 1, volatility: 5, consistency: -3, tyreCare: -2, pressure: 2 },
+    difficulty: 1,
+    ceiling: 3,
+    control: -3
   }
+};
+
+const TROPHY_GUIDE = {
+  title: ["Campeonatos", "Titulo de pilotos ganado en F3, F2 o F1."],
+  constructor: ["Constructores", "Aporte decisivo al equipo por titulo o temporada de muchos puntos."],
+  podium: ["Podios", "Temporadas donde llegaste al podio y sostuviste domingos fuertes."],
+  pole: ["Poles", "Clasificaciones destacadas con ritmo de vuelta rapida."],
+  sprint: ["Sprints", "Reconocimiento de ritmo corto: minijuegos fuertes, sprints o varias victorias."],
+  honor: ["Hitos", "Primer podio, primera victoria, rookie destacado o remontada especial."]
 };
 
 const STAT_NAMES = {
@@ -57,28 +72,28 @@ const STAT_NAMES = {
 const BASE_STATS = ["pace", "racecraft", "tyre", "technical", "focus"];
 
 const TEAM_LOGOS = {
-  "Campos Racing": "assets/teams/campos-racing.svg",
-  "Trident": "assets/teams/trident.svg",
-  "MP Motorsport": "assets/teams/mp-motorsport.svg",
-  "ART Grand Prix": "assets/teams/art-grand-prix.svg",
-  "Van Amersfoort Racing": "assets/teams/van-amersfoort-racing.svg",
-  "Rodin Motorsport": "assets/teams/rodin-motorsport.svg",
-  "PREMA Racing": "assets/teams/prema-racing.svg",
-  "Hitech": "assets/teams/hitech.svg",
-  "AIX Racing": "assets/teams/aix-racing.svg",
-  "DAMS Lucas Oil": "assets/teams/dams-lucas-oil.svg",
-  "Invicta Racing": "assets/teams/invicta-racing.svg",
-  "Mercedes": "assets/teams/mercedes.svg",
-  "Ferrari": "assets/teams/ferrari.svg",
-  "McLaren": "assets/teams/mclaren.svg",
-  "Red Bull Racing": "assets/teams/red-bull-racing.svg",
-  "Racing Bulls": "assets/teams/racing-bulls.svg",
-  "Alpine": "assets/teams/alpine.svg",
-  "Haas F1 Team": "assets/teams/haas-f1-team.svg",
-  "Audi": "assets/teams/audi.svg",
-  "Williams": "assets/teams/williams.svg",
-  "Aston Martin": "assets/teams/aston-martin.svg",
-  "Cadillac": "assets/teams/cadillac.svg"
+  "Campos Racing": "assets/teams/campos-racing.png",
+  "Trident": "assets/teams/trident.png",
+  "MP Motorsport": "assets/teams/mp-motorsport.png",
+  "ART Grand Prix": "assets/teams/art-grand-prix.png",
+  "Van Amersfoort Racing": "assets/teams/van-amersfoort-racing.png",
+  "Rodin Motorsport": "assets/teams/rodin-motorsport.png",
+  "PREMA Racing": "assets/teams/prema-racing.png",
+  "Hitech": "assets/teams/hitech.png",
+  "AIX Racing": "assets/teams/aix-racing.png",
+  "DAMS Lucas Oil": "assets/teams/dams-lucas-oil.png",
+  "Invicta Racing": "assets/teams/invicta-racing.png",
+  "Mercedes": "assets/teams/mercedes.png",
+  "Ferrari": "assets/teams/ferrari.png",
+  "McLaren": "assets/teams/mclaren.png",
+  "Red Bull Racing": "assets/teams/red-bull-racing.png",
+  "Racing Bulls": "assets/teams/racing-bulls.png",
+  "Alpine": "assets/teams/alpine.png",
+  "Haas F1 Team": "assets/teams/haas-f1-team.png",
+  "Audi": "assets/teams/audi.png",
+  "Williams": "assets/teams/williams.png",
+  "Aston Martin": "assets/teams/aston-martin.png",
+  "Cadillac": "assets/teams/cadillac.png"
 };
 
 const TEAMS = {
@@ -224,7 +239,7 @@ const MOMENT_BANK = [
   ],
   [
   {
-    phase: "Mitad de ano",
+    phase: "Mitad de año",
     title: "Mejora del auto",
     text: "Hay una sola tanda seria de desarrollo. Tu feedback decide que pieza llega primero.",
     minigame: "apex",
@@ -235,7 +250,7 @@ const MOMENT_BANK = [
     ]
   },
   {
-    phase: "Mitad de ano",
+    phase: "Mitad de año",
     title: "Cambio de ingeniero",
     text: "Tu ingeniero recibe una oferta de otro equipo. Puedes retenerlo, adaptarte o traer alguien de tu entorno.",
     minigame: "radio",
@@ -246,7 +261,7 @@ const MOMENT_BANK = [
     ]
   },
   {
-    phase: "Mitad de ano",
+    phase: "Mitad de año",
     title: "Rivalidad al limite",
     text: "Tu rival declara que eres rapido, pero inconsistente. El paddock espera tu respuesta.",
     rival: true,
@@ -465,7 +480,7 @@ const EXTRA_MOMENTS = [
   ],
   [
     {
-      phase: "Mitad de ano",
+      phase: "Mitad de año",
       title: "Oferta de otro manager",
       text: "Un representante con contactos en F1 te busca. Tu manager actual estuvo desde karting.",
       choices: [
@@ -475,7 +490,7 @@ const EXTRA_MOMENTS = [
       ]
     },
     {
-      phase: "Mitad de ano",
+      phase: "Mitad de año",
       title: "Test de F1 en simulador",
       text: "Un equipo de F1 te presta una sesion virtual. No es contrato, pero queda registro.",
       minigame: "sector",
@@ -486,7 +501,7 @@ const EXTRA_MOMENTS = [
       ]
     },
     {
-      phase: "Mitad de ano",
+      phase: "Mitad de año",
       title: "Rival al mismo equipo",
       text: "Tu rival tambien suena para tu asiento. El duelo ahora es deportivo y politico.",
       rival: true,
@@ -498,7 +513,7 @@ const EXTRA_MOMENTS = [
       ]
     },
     {
-      phase: "Mitad de ano",
+      phase: "Mitad de año",
       title: "Actualizacion fallida",
       text: "La pieza nueva no funciona. El equipo necesita decidir si volver atras.",
       minigame: "radio",
@@ -509,7 +524,7 @@ const EXTRA_MOMENTS = [
       ]
     },
     {
-      phase: "Mitad de ano",
+      phase: "Mitad de año",
       title: "Fatiga de calendario",
       text: "Tres fines de semana seguidos dejan al equipo destruido. Tu preparador pide bajar intensidad.",
       choices: [
@@ -653,12 +668,12 @@ const GENERATED_EVENT_SEEDS = [
 ];
 
 function makeGeneratedEvent(phaseIndex, seed, seedIndex) {
-  const phase = ["Pretemporada", "Primeras fechas", "Sprint", "Mitad de ano", "Final de temporada"][phaseIndex];
+  const phase = ["Pretemporada", "Primeras fechas", "Sprint", "Mitad de año", "Final de temporada"][phaseIndex];
   const minigames = [
     ["focus", "tyres", "radio", "brake", null],
-    ["sector", "walls", "lights", "ers", "brake", "corner"],
-    ["drs", "ers", "duel", "tyres", "corner", "brake"],
-    ["radio", "sector", "focus", "corner", "boxcrew", null],
+    ["sector", "walls", "lights", "ers", "brake", "corner", "apex"],
+    ["drs", "ers", "duel", "tyres", "corner", "brake", "apex"],
+    ["radio", "sector", "focus", "corner", "boxcrew", "apex", null],
     ["pit", "duel", "tyres", "radio", "boxcrew", "brake"]
   ];
   const game = minigames[phaseIndex][seedIndex % minigames[phaseIndex].length];
@@ -793,6 +808,9 @@ function initSetup() {
   $("startBtn").addEventListener("click", startCareer);
   $("saveBtn").addEventListener("click", saveCareer);
   $("resetBtn").addEventListener("click", resetCareer);
+  document.querySelectorAll("[data-nav]").forEach((button) => {
+    button.addEventListener("click", () => navigateHeader(button.dataset.nav));
+  });
   const saved = localStorage.getItem("el-elegido-save");
   if (saved) {
     state = JSON.parse(saved);
@@ -800,6 +818,26 @@ function initSetup() {
     showGame();
     render();
   }
+}
+
+function navigateHeader(view) {
+  if (!state) {
+    $("setup").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  if (view === "race") {
+    render();
+    return;
+  }
+  if (view === "lab") renderCareerLab();
+  if (view === "telemetry") renderTelemetry();
+  if (view === "trophies") renderTrophyGuide();
+}
+
+function setActiveNav(view) {
+  document.querySelectorAll("[data-nav]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.nav === view);
+  });
 }
 
 function migrateSave() {
@@ -812,7 +850,14 @@ function migrateSave() {
   state.milestones = state.milestones || {};
   state.seenEventTitles = state.seenEventTitles || state.decisions.map((item) => item.title).filter(Boolean).slice(0, 35);
   state.minigameHistory = state.minigameHistory || [];
+  state.minigameCounts = state.minigameCounts || {};
+  state.pendingCelebrations = state.pendingCelebrations || [];
+  state.marketContext = state.marketContext || null;
+  state.careerDriveMode = state.careerDriveMode || null;
   if (state.season && !state.season.moments) state.season = null;
+  if (state.season && state.season.driveModeLocked === undefined) {
+    state.season.driveModeLocked = (state.season.moment || 0) > 0;
+  }
   state.decisions.forEach((item) => {
     item.impact = item.impact || "Sin impacto registrado";
   });
@@ -933,6 +978,10 @@ function startCareer() {
     decisions: [],
     seenEventTitles: [],
     minigameHistory: [],
+    minigameCounts: {},
+    pendingCelebrations: [],
+    marketContext: null,
+    careerDriveMode: null,
     season: null
   };
   showGame();
@@ -1003,9 +1052,11 @@ function tierName(tier) {
 }
 
 function render() {
+  setActiveNav("race");
   renderTimeline();
   if (state.age >= 36 || (state.category === "F1" && state.seasons >= 15)) {
     renderRetirement();
+    showPendingCelebration();
     return;
   }
 
@@ -1018,11 +1069,13 @@ function render() {
 
   if (!state.team) {
     renderOffers(state.seasons === 0);
+    showPendingCelebration();
     return;
   }
 
   if (!state.season) startSeason();
   renderMoment();
+  showPendingCelebration();
 }
 
 function latestTitleTrophy() {
@@ -1031,6 +1084,7 @@ function latestTitleTrophy() {
 
 function startSeason() {
   const selectedMoments = chooseSeasonMoments();
+  const lockedMode = Boolean(state.careerDriveMode);
   state.season = {
     number: state.seasons + 1,
     category: state.category,
@@ -1040,9 +1094,11 @@ function startSeason() {
     moments: selectedMoments,
     modifiers: { setup: 0, qualy: 0, race: 0, consistency: 0, volatility: 0, tyreCare: 0, carBoost: 0 },
     minigameScore: 0,
-    driveMode: "balanced",
+    driveMode: state.careerDriveMode || "balanced",
+    driveModeLocked: lockedMode,
     decisions: []
   };
+  if (lockedMode) applySeasonEffect((DRIVE_MODES[state.careerDriveMode] || DRIVE_MODES.balanced).season);
 }
 
 function chooseSeasonMoments() {
@@ -1054,15 +1110,18 @@ function chooseSeasonMoments() {
 function pickMomentForPhase(phaseIndex, seasonGames) {
   const phaseEvents = MOMENT_BANK[phaseIndex];
   const recentTitles = new Set((state.seenEventTitles || []).slice(0, 28));
-  const recentGames = new Set((state.minigameHistory || []).slice(0, 8));
-  const underused = new Set(["apex", "drs", "lights", "pit", "boxcrew"]);
+  const recentGames = new Set((state.minigameHistory || []).slice(0, 10));
+  const counts = state.minigameCounts || {};
+  const allGames = phaseEvents.map((event) => event.minigame).filter(Boolean);
+  const lowestUse = allGames.length ? Math.min(...allGames.map((game) => counts[game] || 0)) : 0;
   const scored = phaseEvents.map((event) => {
     let score = rnd(0, 6);
-    if (event.minigame && underused.has(event.minigame)) score += 12;
-    if (event.minigame && recentGames.has(event.minigame)) score -= 7;
+    if (event.minigame && (counts[event.minigame] || 0) === lowestUse) score += 14;
+    if (event.minigame) score -= Math.min(18, (counts[event.minigame] || 0) * 2);
+    if (event.minigame && recentGames.has(event.minigame)) score -= 14;
     if (event.minigame && seasonGames.includes(event.minigame)) score -= 15;
     if (recentTitles.has(event.title)) score -= 18;
-    if (!event.minigame && seasonGames.length > 0) score += 2;
+    if (!event.minigame && seasonGames.length > 0) score += 3;
     return { event, score };
   });
   const selected = scored.sort((a, b) => b.score - a.score)[0].event;
@@ -1071,6 +1130,10 @@ function pickMomentForPhase(phaseIndex, seasonGames) {
 }
 
 function renderMoment() {
+  if (!state.season.driveModeLocked) {
+    renderSeasonPlan();
+    return;
+  }
   const moment = state.season.moments[state.season.moment];
   clearFeedback();
   state.season.driveMode = state.season.driveMode || "balanced";
@@ -1093,10 +1156,8 @@ function renderMoment() {
       </div>
       <div class="big-number">${avg(state.stats)}</div>
     </div>
-    ${renderDriveModes()}
   `;
   $("choiceGrid").innerHTML = moment.choices.map((choice, index) => choiceButton(choice, index)).join("");
-  bindDriveModes();
   document.querySelectorAll(".choice").forEach((button) => {
     button.addEventListener("click", () => chooseMoment(moment, Number(button.dataset.index)));
   });
@@ -1120,29 +1181,58 @@ function choiceButton(choice, index) {
   `;
 }
 
-function renderDriveModes() {
-  return `
-    <div class="drive-panel">
-      <span>Modo de manejo</span>
+function renderSeasonPlan() {
+  $("careerStage").textContent = `${state.category} - Temporada ${state.season.number}`;
+  $("careerTitle").textContent = "Elegir identidad de manejo";
+  $("minigame").classList.add("hidden");
+  clearFeedback();
+  $("mainCard").innerHTML = `
+    <div class="driver-card">
       <div>
-        ${Object.entries(DRIVE_MODES).map(([key, mode]) => `
-          <button type="button" class="${state.season.driveMode === key ? "active" : ""}" data-drive="${key}">
-            <strong>${mode.name}</strong>
-            <small>${mode.text}</small>
-          </button>
-        `).join("")}
+        ${teamBadge(state.team)}
+        <p class="phase">Plan de temporada</p>
+        <p>El estilo queda fijado para toda la carrera. Suma ventajas, pero también arrastra costos.</p>
+        <div class="impact-strip">
+          <span>Auto ${state.team.power}</span>
+          <span>Riesgo anual</span>
+          <span>Decisiones</span>
+          <span>Minijuegos</span>
+        </div>
       </div>
+      <div class="big-number">${avg(state.stats)}</div>
     </div>
   `;
+  $("choiceGrid").innerHTML = Object.entries(DRIVE_MODES).map(([key, mode], index) => `
+    <button class="choice drive-choice" type="button" data-drive="${key}" data-index="${index}">
+      <strong>${mode.name}</strong>
+      <small>${mode.text}</small>
+      <span class="choice-impact">${describeEffect(mode.season, "Temporada ") || "Sin cambio de temporada"}</span>
+    </button>
+  `).join("");
+  document.querySelectorAll("[data-drive]").forEach((button) => {
+    button.addEventListener("click", () => lockDriveMode(button.dataset.drive));
+  });
 }
 
-function bindDriveModes() {
-  document.querySelectorAll("[data-drive]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.season.driveMode = button.dataset.drive;
-      renderMoment();
-    });
-  });
+function lockDriveMode(key) {
+  const mode = DRIVE_MODES[key] || DRIVE_MODES.balanced;
+  state.careerDriveMode = key;
+  state.season.driveMode = key;
+  state.season.driveModeLocked = true;
+  applySeasonEffect(mode.season);
+  const record = {
+    season: state.season.number,
+    phase: "Identidad de manejo",
+    title: `Modo ${mode.name}`,
+    text: `${mode.text} Queda fijado para toda la carrera.`,
+    impact: describeEffect(mode.season, "Temporada ") || "Modo equilibrado"
+  };
+  state.season.decisions.push(record);
+  state.decisions.unshift(record);
+  state.decisions = state.decisions.slice(0, 18);
+  renderStats();
+  renderTimeline();
+  renderMoment();
 }
 
 function renderStats() {
@@ -1158,24 +1248,21 @@ function renderTrophyCase() {
   if (!$("trophyCase") || !state) return;
   const counts = trophyCounts();
   const major = counts.title + counts.constructor;
-  const honors = (state.trophies || []).length - major;
+  const honors = counts.podium + counts.sprint + counts.pole + counts.overtake + counts.firstWin + counts.firstPodium + counts.rookie;
   $("trophyCase").innerHTML = `
     <div class="trophy-head">
       <span>Vitrina</span>
       <strong>${(state.trophies || []).length}</strong>
     </div>
-    <div class="trophy-split">
-      <span><b>Mayores</b><strong>${major}</strong></span>
-      <span><b>Hitos</b><strong>${honors}</strong></span>
+    <div class="trophy-showcase">
+      ${trophyCupCard("Pilotos", counts.title, "title")}
+      ${trophyCupCard("Const.", counts.constructor, "constructor")}
+      ${trophyCupCard("Podios", counts.podium, "podium")}
+      ${trophyCupCard("Poles", counts.pole, "pole")}
+      ${trophyCupCard("Sprints", counts.sprint, "sprint")}
+      ${trophyCupCard("Hitos", honors - counts.podium - counts.pole - counts.sprint, "honor")}
     </div>
-    <div class="trophy-grid">
-      ${trophyPill("Copa", counts.title)}
-      ${trophyPill("Const.", counts.constructor)}
-      ${trophyPill("Podio", counts.podium)}
-      ${trophyPill("Sprint", counts.sprint)}
-      ${trophyPill("Pole", counts.pole)}
-      ${trophyPill("Hitos", counts.firstWin + counts.firstPodium + counts.rookie)}
-    </div>
+    <p class="trophy-note">${major ? `${major} copas mayores ganadas` : "Las copas grandes esperan su temporada."}</p>
   `;
 }
 
@@ -1186,52 +1273,198 @@ function trophyCounts() {
   }, { title: 0, podium: 0, sprint: 0, overtake: 0, constructor: 0, rookie: 0, pole: 0, firstWin: 0, firstPodium: 0 });
 }
 
-function trophyPill(label, count) {
-  return `<span class="${count ? "earned" : ""}"><b>${label}</b><strong>${count || 0}</strong></span>`;
+function trophyCupCard(label, count, type) {
+  return `
+    <span class="trophy-cup-card ${count ? "earned" : ""} ${type}">
+      <img src="${trophyIcon(type)}" alt="" />
+      <b>${label}</b>
+      <strong>${count || 0}</strong>
+    </span>
+  `;
+}
+
+function renderInfoView(view, stage, title, html) {
+  setActiveNav(view);
+  clearFeedback();
+  $("minigame").classList.add("hidden");
+  $("careerStage").textContent = stage;
+  $("careerTitle").textContent = title;
+  $("mainCard").innerHTML = html;
+  $("choiceGrid").innerHTML = `<button id="backToRaceBtn" type="button" class="primary">Volver a Race Control</button>`;
+  $("backToRaceBtn").addEventListener("click", render, { once: true });
+  renderStats();
+  renderTrophyCase();
+  renderTimeline();
+}
+
+function renderCareerLab() {
+  const value = driverValue();
+  const interest = f1InterestScore();
+  const last = state.trajectory?.[0];
+  const mode = DRIVE_MODES[state.careerDriveMode || state.season?.driveMode || "balanced"] || DRIVE_MODES.balanced;
+  renderInfoView("lab", "Career Lab", "Proyecto deportivo", `
+    <div class="driver-card">
+      <div>
+        ${state.team ? teamBadge(state.team) : "<p class=\"phase\">Sin equipo firmado</p>"}
+        <p>Edad ${state.age}. Categoria ${state.category}. Modo de manejo: ${mode.name}.</p>
+        <div class="impact-strip">
+          <span>Valor ${value}</span>
+          <span>Interes F1 ${interest}</span>
+          <span>Rival ${state.rival.heat}/100</span>
+          <span>Temporadas ${state.seasons}</span>
+        </div>
+      </div>
+      <div class="big-number">${avg(state.stats)}</div>
+    </div>
+    <div class="info-grid">
+      <article class="info-card"><strong>Mercado</strong><span>${promotionHint()}</span></article>
+      <article class="info-card"><strong>Rival</strong><span>${state.rival.name} tiene valoracion ${state.rival.rating} y tension ${state.rival.heat}/100.</span></article>
+      <article class="info-card"><strong>Ultima temporada</strong><span>${last ? `${last.category} con ${last.team}: ${last.points} pts, score ${last.score}, piloto vs auto ${last.overperformance >= 0 ? "+" : ""}${last.overperformance}.` : "Todavia no hay temporada cerrada."}</span></article>
+      <article class="info-card"><strong>Trayectoria</strong><span>F3 ${state.categorySeasons.F3 || 0} temp. | F2 ${state.categorySeasons.F2 || 0} temp. | F1 ${state.categorySeasons.F1 || 0} temp.</span></article>
+    </div>
+  `);
+}
+
+function renderTelemetry() {
+  const lastFive = (state.trajectory || []).slice(0, 5);
+  const mode = DRIVE_MODES[state.careerDriveMode || state.season?.driveMode || "balanced"] || DRIVE_MODES.balanced;
+  const games = Object.entries(state.minigameCounts || {}).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  renderInfoView("telemetry", "Telemetry", "Lectura de rendimiento", `
+    <div class="driver-card">
+      <div>
+        <p class="phase">Modo ${mode.name}</p>
+        <p>${mode.text}</p>
+        <div class="impact-strip">
+          <span>Velocidad ${state.stats.pace}</span>
+          <span>Racecraft ${state.stats.racecraft}</span>
+          <span>Neumaticos ${state.stats.tyre}</span>
+          <span>Feedback ${state.stats.technical}</span>
+        </div>
+      </div>
+      <div class="big-number">${avg(state.stats)}</div>
+    </div>
+    <div class="info-grid">
+      <article class="info-card"><strong>Forma reciente</strong><span>${lastFive.length ? lastFive.map((item) => `T${item.season}: score ${item.score}`).join(" | ") : "Sin datos de temporada."}</span></article>
+      <article class="info-card"><strong>Piloto vs auto</strong><span>${lastFive.length ? lastFive.map((item) => `T${item.season} ${item.overperformance >= 0 ? "+" : ""}${item.overperformance}`).join(" | ") : "Aparece al cerrar una temporada."}</span></article>
+      <article class="info-card"><strong>Minijuegos mas vistos</strong><span>${games.length ? games.map(([game, count]) => `${game} ${count}`).join(" | ") : "Todavia sin minijuegos registrados."}</span></article>
+      <article class="info-card"><strong>Superlicencia</strong><span>${state.license} puntos acumulados.</span></article>
+    </div>
+  `);
+}
+
+function renderTrophyGuide() {
+  const counts = trophyCounts();
+  const guideCounts = {
+    ...counts,
+    honor: counts.overtake + counts.firstWin + counts.firstPodium + counts.rookie
+  };
+  renderInfoView("trophies", "Vitrina", "Trofeos y significado", `
+    ${renderTrophyWall() || "<p>La vitrina todavia esta vacia, pero estos son los premios que puede ganar tu carrera.</p>"}
+    <div class="trophy-guide">
+      ${Object.entries(TROPHY_GUIDE).map(([type, [label, description]]) => `
+        <article class="trophy-guide-card">
+          <img src="${trophyIcon(type)}" alt="" />
+          <div><strong>${label} (${guideCounts[type] || 0})</strong><span>${description}</span></div>
+        </article>
+      `).join("")}
+    </div>
+  `);
+}
+
+function trophyIcon(type) {
+  const icons = {
+    title: "assets/trophies/title.png",
+    constructor: "assets/trophies/constructor.png",
+    podium: "assets/trophies/podium.png",
+    pole: "assets/trophies/pole.png",
+    sprint: "assets/trophies/sprint.png",
+    honor: "assets/trophies/honor.png",
+    overtake: "assets/trophies/honor.png",
+    firstWin: "assets/trophies/title.png",
+    firstPodium: "assets/trophies/podium.png",
+    rookie: "assets/trophies/honor.png"
+  };
+  return icons[type] || "assets/trophies/honor.png";
 }
 
 function renderOffers(first = false) {
+  clearFeedback();
   const value = driverValue();
   const f1Interest = f1InterestScore();
+  const renewal = renewalOffer(value, first);
   let pool = teamObjects(state.category)
     .filter((team) => teamEligible(team, value, first))
+    .filter((team) => !renewal || team.name !== renewal.name);
   if (pool.length < 3) {
     pool = teamObjects(state.category)
       .sort((a, b) => a.power - b.power)
-      .slice(0, state.category === "F1" ? 5 : 7);
+      .slice(0, state.category === "F1" ? 5 : 7)
+      .filter((team) => !renewal || team.name !== renewal.name);
   }
-  const teams = pool
+  const transferSlots = renewal ? 2 : 3;
+  const transferTeams = pool
     .sort((a, b) => Math.abs(a.power - value) - Math.abs(b.power - value) + rnd(-4, 4))
-    .slice(0, 3)
-    .map((team) => ({ ...team, pressure: rnd(45, 90) }));
+    .slice(0, transferSlots)
+    .map((team) => ({ ...team, pressure: rnd(45, 90), offerType: "transfer" }));
+  const teams = renewal ? [{ ...renewal, offerType: "renewal" }, ...transferTeams] : transferTeams;
   $("careerStage").textContent = first ? "Contrato inicial" : "Mercado";
   $("careerTitle").textContent = first ? "Elige tu primer equipo" : "Elige tu proximo asiento";
   $("mainCard").innerHTML = `
-    ${!first && latestTitleTrophy() ? championshipBanner(latestTitleTrophy()) : ""}
-    <p>${first ? "Tres estructuras miran tu talento. Cada asiento cambia aprendizaje, presion y exposicion." : "El mercado abre despues de tu temporada. El auto mas fuerte no siempre es el camino mas inteligente."}</p>
+    <p>${first ? "Tres estructuras miran tu talento. Cada asiento cambia aprendizaje, presion y exposicion." : renewal ? "Tu equipo quiere saber si seguis en el proyecto. Afuera tambien hay llamadas." : "El mercado abre despues de tu temporada. El auto mas fuerte no siempre es el camino mas inteligente."}</p>
     ${marketIntel(value, f1Interest, teams)}
   `;
   $("choiceGrid").innerHTML = teams.map((team, index) => `
-    <button class="choice team-choice" type="button" data-index="${index}">
+    <button class="choice team-choice ${team.offerType === "renewal" ? "renewal-choice" : ""}" type="button" data-index="${index}" style="--team:${team.color}">
       ${teamBadge(team)}
       <small>${state.category} - ${tierName(team.tier)} - Potencial ${team.power} - Presion ${team.pressure} - Licencia ${team.country}</small>
-      <span class="choice-impact">${teamFitReason(team, value)}</span>
+      <span class="choice-impact">${team.offerType === "renewal" ? renewalFitReason(team, value) : teamFitReason(team, value)}</span>
     </button>
   `).join("");
   document.querySelectorAll(".choice").forEach((button) => {
     button.addEventListener("click", () => {
       state.team = teams[Number(button.dataset.index)];
+      const renewed = state.team.offerType === "renewal";
+      delete state.team.offerType;
+      state.marketContext = null;
       if (state.rival && !state.rival.team) state.rival.team = teamObjects(state.category).find((team) => team.name !== state.team.name);
       state.decisions.unshift({
         season: state.seasons + 1,
         phase: "Mercado",
-        title: first ? "Primer contrato" : "Fichaje",
-        text: `${state.name} firma con ${state.team.name} en ${state.category}.`,
+        title: first ? "Primer contrato" : renewed ? "Renovacion" : "Fichaje",
+        text: renewed ? `${state.name} renueva con ${state.team.name} en ${state.category}.` : `${state.name} firma con ${state.team.name} en ${state.category}.`,
         impact: `Valor de mercado ${value} - Potencial equipo ${state.team.power}`
       });
       render();
     });
   });
+}
+
+function renewalOffer(value, first) {
+  if (first) return null;
+  const recent = state.trajectory?.[0];
+  const contextTeam = state.marketContext?.category === state.category ? state.marketContext.currentTeam : null;
+  const inferredTeam = recent?.category === state.category
+    ? teamObjects(state.category).find((team) => team.name === recent.team)
+    : null;
+  const current = contextTeam || inferredTeam;
+  if (!current || !recent || recent.team !== current.name) return null;
+  const form = recent.score + Math.max(0, recent.overperformance || 0) * 1.4 + recent.title * 10 + recent.wins * 2.5 + recent.podiums * 0.9;
+  const patience = current.tier === "top" ? 82 : current.tier === "mid" ? 74 : 66;
+  const loyalty = state.personality === "Leal" ? 5 : 0;
+  const renewalScore = form + loyalty + Math.max(0, value - current.power) * 0.45 - Math.max(0, current.power - value) * 0.35;
+  if (renewalScore < patience) return null;
+  return {
+    ...current,
+    pressure: clamp(Math.round(current.pressure || 58 + Math.max(0, current.power - value) * 1.8 - recent.overperformance * 0.8), 35, 92)
+  };
+}
+
+function renewalFitReason(team, value) {
+  const recent = state.trajectory?.[0];
+  const trust = recent?.title ? "campeonato en casa" : recent?.overperformance >= 8 ? "el box confia en tu salto" : "continuidad y datos conocidos";
+  if (team.power >= value + 10) return `${trust}, pero el auto te exige subir nivel ya`;
+  if (value >= team.power + 8) return `${trust}, lider natural del proyecto`;
+  return `${trust}, renovacion logica sin resetear entorno`;
 }
 
 function f1InterestScore() {
@@ -1301,7 +1534,7 @@ function promotionHint() {
   if (state.category === "F3") {
     const years = state.categorySeasons.F3 || 0;
     if (years >= 2) return "F2 deberia abrirse con una temporada correcta.";
-    return "Un ano fuerte o dos anos solidos abren F2.";
+    return "Un año fuerte o dos años sólidos abren F2.";
   }
   if (state.category === "F2") {
     const years = state.categorySeasons.F2 || 0;
@@ -1357,7 +1590,7 @@ function f1TopEligible(team, value, f1Years) {
 function teamBadge(team) {
   return `
     <div class="team-badge">
-      <span class="logo" style="--team:${team.color}">
+      <span class="logo ${logoTone(team)}" style="--team:${team.color}">
         ${team.logo ? `<img src="${team.logo}" alt="" onload="this.nextElementSibling.style.display='none'" onerror="this.remove()" />` : ""}
         <b>${team.code}</b>
       </span>
@@ -1367,13 +1600,20 @@ function teamBadge(team) {
   `;
 }
 
+function logoTone(team) {
+  const lightBacked = new Set(["Rodin Motorsport", "ART Grand Prix", "Van Amersfoort Racing"]);
+  const darkBacked = new Set(["Mercedes", "Ferrari", "McLaren", "Red Bull Racing", "Racing Bulls", "Alpine", "Haas F1 Team", "Audi", "Williams", "Aston Martin", "Cadillac"]);
+  if (lightBacked.has(team.name)) return "logo-light";
+  if (darkBacked.has(team.name)) return "logo-dark";
+  return "logo-native";
+}
+
 function chooseMoment(moment, index) {
   const choice = moment.choices[index];
   const mode = DRIVE_MODES[state.season.driveMode || "balanced"];
   const before = { ...state.stats };
   applyEffect(state.stats, choice.effect);
   applySeasonEffect(choice.season);
-  applySeasonEffect(mode.season);
   const risk = decisionRisk(choice);
   const failedRisk = risk > 0 && rnd(1, 100) <= risk;
   if (failedRisk) {
@@ -1493,6 +1733,10 @@ function minigameDifficulty() {
 
 function finishMinigame(title, bonus, text) {
   if (!state.season) return;
+  if (state.activeMinigame) {
+    state.minigameCounts = state.minigameCounts || {};
+    state.minigameCounts[state.activeMinigame] = (state.minigameCounts[state.activeMinigame] || 0) + 1;
+  }
   state.season.minigameScore += bonus;
   state.season.decisions.push({
     season: state.season.number,
@@ -2054,27 +2298,48 @@ function advanceMoment() {
 
 function simulateSeason() {
   $("minigame").classList.add("hidden");
+  clearFeedback();
   const season = state.season;
   const mods = season.modifiers;
+  const driveMode = DRIVE_MODES[season.driveMode || "balanced"] || DRIVE_MODES.balanced;
   const car = state.team.power + mods.carBoost;
   const driver = avg(state.stats);
   const pressureDrag = Math.max(0, mods.pressure || 0) * 0.85 + (state.rival.heat > 65 ? 1.5 : 0);
-  const luck = rnd(-12, 10) + mods.volatility * 0.45 - Math.max(0, mods.consistency) * 0.85;
-  const form = mods.setup * 0.72 + mods.qualy * 0.72 + mods.race * 0.86 + mods.tyreCare * 0.58 + season.minigameScore * 0.74;
+  const volatility = Math.max(0, mods.volatility || 0);
+  const controlRating = ((state.stats.focus || 50) + (state.stats.racecraft || 50) + (state.stats.tyre || 50)) / 3;
+  const volatilitySwing = rnd(Math.round(-volatility * 1.35), Math.round(volatility * 0.72));
+  const modeControlDrag = Math.max(0, 84 - controlRating) * Math.max(0, -driveMode.control) * 0.1;
+  const f1AttackTierDrag = state.category === "F1" && season.driveMode === "attack"
+    ? state.team.tier === "top" ? 0.8 : state.team.tier === "mid" ? 2.6 : 4.2
+    : 0;
+  const attackReliabilityDrag = season.driveMode === "attack"
+    ? 1.45 + volatility * 0.34 + Math.max(0, 90 - controlRating) * 0.08 + f1AttackTierDrag
+    : 0;
+  const safeCeilingDrag = season.driveMode === "safe" ? 1.5 + Math.max(0, car - 88) * 0.08 : 0;
+  const baseLuck = rnd(-12, 10);
+  const consistencyRelief = baseLuck < 0 ? Math.min(Math.abs(baseLuck), Math.max(0, mods.consistency || 0) * 0.7) : 0;
+  const luck = baseLuck + consistencyRelief + volatilitySwing;
+  const form = mods.setup * 0.72 + mods.qualy * 0.72 + mods.race * 0.78 + mods.tyreCare * 0.62 + season.minigameScore * 0.68 + (driveMode.ceiling || 0);
   const eliteDriverBonus = Math.max(0, driver - 84) * 1.05 + Math.max(0, state.stats.racecraft - 88) * 0.26 + Math.max(0, state.stats.technical - 88) * 0.16;
   const carDrag = Math.max(0, 78 - car) * (state.category === "F1" ? 0.22 : 0.1);
-  const driverScore = driver * 0.72 + form + eliteDriverBonus - pressureDrag;
+  const driverScore = driver * 0.72 + form + eliteDriverBonus - pressureDrag - attackReliabilityDrag - modeControlDrag - safeCeilingDrag;
   const carExpectation = car + (state.category === "F1" ? 3 : 0);
-  const score = driver * 0.58 + car * 0.24 + state.stats.focus * 0.08 + form + eliteDriverBonus + luck - pressureDrag - carDrag;
+  const score = driver * 0.58 + car * 0.24 + state.stats.focus * 0.08 + form + eliteDriverBonus + luck - pressureDrag - carDrag - attackReliabilityDrag - modeControlDrag - safeCeilingDrag;
+  const overperformance = Math.round(score - carExpectation);
   const f1CarDeficit = state.category === "F1" ? Math.max(0, 90 - car) : 0;
-  const f1RaceTax = state.category === "F1" && state.team.tier !== "top" ? (state.team.tier === "mid" ? 2 : 5) : 0;
-  const f1TitleTax = state.category === "F1" && state.team.tier !== "top" ? (state.team.tier === "mid" ? 4.5 : 8) : 0;
-  const winLine = state.category === "F1" ? 90 + f1CarDeficit * 0.28 + f1RaceTax * 0.35 : state.category === "F2" ? 83 : 80;
-  const podiumLine = state.category === "F1" ? 76 + f1CarDeficit * 0.2 + f1RaceTax * 0.2 : state.category === "F2" ? 70 : 66;
+  const f1RaceTax = state.category === "F1" && state.team.tier !== "top" ? (state.team.tier === "mid" ? 4 : 8) : 0;
+  const f1TitleTax = state.category === "F1" && state.team.tier !== "top" ? (state.team.tier === "mid" ? 8 : 15) : 0;
+  const winLine = state.category === "F1" ? 91 + f1CarDeficit * 0.38 + f1RaceTax * 0.42 : state.category === "F2" ? 83 : 80;
+  const podiumLine = state.category === "F1" ? 78 + f1CarDeficit * 0.26 + f1RaceTax * 0.25 : state.category === "F2" ? 70 : 66;
   const wins = Math.max(0, Math.floor((score - winLine) / 7) + (score > winLine + 2 && rnd(0, 100) > 48 ? 1 : 0));
   const podiums = Math.max(wins, Math.floor((score - podiumLine) / 6) + (score > podiumLine + 2 && rnd(0, 100) > 58 ? 1 : 0));
-  const points = Math.max(0, Math.round((score - 49) * (state.category === "F1" ? 5.35 : 3.35)));
-  const titleLine = state.category === "F1" ? 104 + f1CarDeficit * 0.58 + f1TitleTax : state.category === "F2" ? 92 : 89;
+  let points = Math.max(0, Math.round((score - 49) * (state.category === "F1" ? 5.35 : 3.35)));
+  if (state.category === "F1" && state.team.tier !== "top") {
+    const tierFactor = state.team.tier === "mid" ? 0.78 : 0.58;
+    const overBonus = Math.max(0, overperformance) * (state.team.tier === "mid" ? 2.2 : 1.4);
+    points = Math.max(0, Math.round(points * tierFactor + overBonus));
+  }
+  const titleLine = state.category === "F1" ? 106 + f1CarDeficit * 0.72 + f1TitleTax : state.category === "F2" ? 92 : 89;
   const title = score + wins * 1.55 + podiums * 0.55 + rnd(-6, 6) > titleLine ? 1 : 0;
   const poles = Math.max(0, Math.floor((state.stats.pace + mods.qualy * 0.8 + season.minigameScore * 0.4 - 66) / 15));
   const licenseGain = state.category === "F3"
@@ -2082,8 +2347,6 @@ function simulateSeason() {
     : state.category === "F2"
       ? Math.floor(points / 18) + title * 22 + (podiums >= 5 ? 4 : 0)
       : 0;
-  const overperformance = Math.round(score - carExpectation);
-
   state.wins += wins;
   state.podiums += podiums;
   state.points += points;
@@ -2104,6 +2367,7 @@ function simulateSeason() {
     reputation: title ? 5 : podiums > 3 ? 2 : 0,
     market: wins > 0 ? 2 : 0
   });
+  applyDriveModeDevelopment(season.driveMode, { title, wins, podiums, overperformance });
   developDriverFromSeason({ wins, podiums, poles, title, score, overperformance, minigameScore: season.minigameScore });
 
   state.trajectory.unshift({
@@ -2160,11 +2424,46 @@ function simulateSeason() {
       impact: "Titulo agregado a la vitrina"
     });
   }
+  queueSeasonCelebrations(earnedTrophies, {
+    season: season.number,
+    category: season.category,
+    team: season.team.name,
+    points,
+    wins,
+    podiums,
+    title,
+    score: Math.round(score)
+  });
 
   state.season = null;
   maybePromote();
   saveCareer();
   render();
+}
+
+function applyDriveModeDevelopment(mode, result) {
+  if (mode === "attack") {
+    applyEffect(state.stats, {
+      racecraft: result.wins || result.title ? 1 : 0,
+      tyre: result.title ? 0 : -1,
+      focus: result.overperformance >= 8 ? 0 : -1,
+      reputation: result.wins ? 1 : -1
+    });
+  }
+  if (mode === "safe") {
+    applyEffect(state.stats, {
+      tyre: 1,
+      focus: 1,
+      pace: result.wins ? 0 : -1,
+      market: result.title ? 1 : -1
+    });
+  }
+  if (mode === "balanced") {
+    applyEffect(state.stats, {
+      technical: 1,
+      focus: result.overperformance >= 0 ? 1 : 0
+    });
+  }
 }
 
 function developDriverFromSeason(result) {
@@ -2268,6 +2567,55 @@ function awardSeasonTrophies(result) {
   return trophies;
 }
 
+function queueSeasonCelebrations(trophies, result) {
+  const majors = trophies.filter((trophy) => trophy.type === "title" || trophy.type === "constructor");
+  if (!majors.length) return;
+  state.pendingCelebrations = [
+    ...(state.pendingCelebrations || []),
+    ...majors.map((trophy) => ({
+      type: trophy.type,
+      label: trophy.type === "title" ? `${result.category}: Campeon de pilotos` : "Campeonato de constructores",
+      team: result.team,
+      season: result.season,
+      detail: trophy.type === "title"
+        ? `${state.name} corona una temporada de ${result.points} pts, ${result.wins} victorias y ${result.podiums} podios.`
+        : `${result.team} celebra tu aporte al campeonato con ${result.points} pts y score ${result.score}.`
+    }))
+  ];
+}
+
+function showPendingCelebration() {
+  if (!state?.pendingCelebrations?.length || document.querySelector(".celebration-board")) return;
+  const celebration = state.pendingCelebrations[0];
+  const board = document.createElement("div");
+  board.className = "celebration-board";
+  board.innerHTML = `
+    <div class="confetti-field" aria-hidden="true">
+      ${Array.from({ length: 28 }, (_, index) => `<i style="--i:${index}; --x:${rnd(6, 94)}%; --d:${rnd(0, 900)}ms;"></i>`).join("")}
+    </div>
+    <section class="celebration-card" role="dialog" aria-modal="true" aria-label="Celebracion de campeonato">
+      <div class="celebration-cup" aria-hidden="true"><img src="${trophyIcon(celebration.type)}" alt="" /></div>
+      <p class="eyebrow">${celebration.type === "title" ? "Campeonato de pilotos" : "Constructores"}</p>
+      <h2>${celebration.label}</h2>
+      <p>${celebration.detail}</p>
+      <div class="celebration-meta">
+        <span>T${celebration.season}</span>
+        <span>${celebration.team}</span>
+        <span>Vitrina +1</span>
+      </div>
+      <button type="button" class="primary" id="celebrationContinue">Seguir carrera</button>
+    </section>
+  `;
+  document.body.appendChild(board);
+  $("celebrationContinue").focus();
+  $("celebrationContinue").addEventListener("click", () => {
+    state.pendingCelebrations.shift();
+    board.remove();
+    saveCareer();
+    showPendingCelebration();
+  }, { once: true });
+}
+
 function maybePromote() {
   const recent = state.trajectory?.[0];
   const recentCategory = (state.trajectory || []).filter((item) => item.category === state.category).slice(0, 3);
@@ -2300,6 +2648,7 @@ function maybePromote() {
   if (state.category === "F3" && ((state.categorySeasons.F3 >= 1 && state.license >= 18 && strongF3) || f3ReadyByTime)) {
     state.category = "F2";
     state.categorySeasons.F2 = state.categorySeasons.F2 || 0;
+    state.marketContext = null;
     state.team = null;
     state.rival.category = "F2";
     state.rival.team = null;
@@ -2320,6 +2669,7 @@ function maybePromote() {
   ) {
     state.category = "F1";
     state.categorySeasons.F1 = state.categorySeasons.F1 || 0;
+    state.marketContext = null;
     state.team = null;
     state.rival.category = "F1";
     state.rival.team = null;
@@ -2331,6 +2681,11 @@ function maybePromote() {
       impact: "Formula 1 desbloqueada"
     });
   } else if (state.seasons % 2 === 0 && Math.random() < 0.55) {
+    state.marketContext = {
+      category: state.category,
+      currentTeam: state.team,
+      season: state.seasons
+    };
     state.team = null;
   }
 }
@@ -2348,6 +2703,7 @@ function renderTimeline() {
 }
 
 function renderRetirement() {
+  clearFeedback();
   const legacyScore = Math.round(state.points + state.wins * 28 + state.podiums * 9 + state.titles * 160 + state.license * 3);
   const verdict = legacyScore > 1700 ? "Leyenda mundial" : legacyScore > 1050 ? "Ganador de epoca" : legacyScore > 620 ? "Piloto de elite" : legacyScore > 260 ? "Profesional respetado" : "Talento que dejo historias";
   $("careerStage").textContent = "Retiro";
@@ -2397,7 +2753,7 @@ function renderCareerAnalysis(legacyScore) {
   const expectedTitles = driverPeak >= 96 ? 4 : driverPeak >= 92 ? 2 : driverPeak >= 88 ? 1 : 0;
   const titleGap = expectedTitles - state.titles;
   const verdict = titleGap > 2
-    ? "Tu talento supero por bastante a la vitrina. Faltaron autos, oportunidades o decisiones clave en anos grandes."
+    ? "Tu talento superó por bastante a la vitrina. Faltaron autos, oportunidades o decisiones clave en años grandes."
     : titleGap > 0
       ? "La carrera dejo la sensacion de que habia una copa mas posible."
       : "La vitrina acompano bien al nivel mostrado.";
@@ -2418,24 +2774,46 @@ function renderTrophyWall() {
   const trophies = (state.trophies || []).slice().reverse();
   if (!trophies.length) return "";
   const majorTypes = new Set(["title", "constructor"]);
-  const major = trophies.filter((trophy) => majorTypes.has(trophy.type)).slice(0, 10);
-  const honors = trophies.filter((trophy) => !majorTypes.has(trophy.type)).slice(0, 18);
+  const counts = trophyCounts();
+  const latestMajor = trophies.filter((trophy) => majorTypes.has(trophy.type)).slice(0, 6);
+  const latestHonors = trophies.filter((trophy) => !majorTypes.has(trophy.type)).slice(0, 8);
   return `
     <div class="trophy-wall">
       <h3>Vitrina</h3>
+      <div class="trophy-wall-grid">
+        ${trophyWallCard("Campeonatos", counts.title, "Pilotos", "title")}
+        ${trophyWallCard("Constructores", counts.constructor, "Equipo", "constructor")}
+        ${trophyWallCard("Podios", counts.podium, "Domingos", "podium")}
+        ${trophyWallCard("Poles", counts.pole, "Sábados", "pole")}
+        ${trophyWallCard("Sprints", counts.sprint, "Ritmo", "sprint")}
+        ${trophyWallCard("Hitos", counts.overtake + counts.firstWin + counts.firstPodium + counts.rookie, "Especiales", "honor")}
+      </div>
       <div class="trophy-wall-section">
-        <strong>Grandes logros</strong>
+        <strong>Ultimas copas grandes</strong>
         <div>
-          ${major.length ? major.map((trophy) => trophyWallPill(trophy)).join("") : "<em>Todavia sin copas mayores.</em>"}
+          ${latestMajor.length ? latestMajor.map((trophy) => trophyWallPill(trophy)).join("") : "<em>Todavia sin copas mayores.</em>"}
         </div>
       </div>
       <div class="trophy-wall-section">
-        <strong>Reconocimientos e hitos</strong>
+        <strong>Ultimos reconocimientos</strong>
         <div>
-          ${honors.length ? honors.map((trophy) => trophyWallPill(trophy)).join("") : "<em>Los hitos apareceran con podios, poles y remontadas.</em>"}
+          ${latestHonors.length ? latestHonors.map((trophy) => trophyWallPill(trophy)).join("") : "<em>Los hitos apareceran con podios, poles y remontadas.</em>"}
         </div>
       </div>
     </div>
+  `;
+}
+
+function trophyWallCard(label, count, sub, type) {
+  return `
+    <article class="trophy-wall-card ${count ? "earned" : ""} ${type}">
+      <img src="${trophyIcon(type)}" alt="" />
+      <div>
+        <b>${label}</b>
+        <strong>${count || 0}</strong>
+        <small>${sub}</small>
+      </div>
+    </article>
   `;
 }
 

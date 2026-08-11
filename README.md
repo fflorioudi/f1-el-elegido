@@ -38,13 +38,13 @@ No usa frameworks ni backend en esta V1. Se abre directo desde `index.html` en c
 - Eventos de temporada: contratos, pretemporada, lluvia, sprint, desarrollo del auto, ingeniero, rivalidad y final de campeonato.
 - Guardado local en el navegador con `localStorage`.
 - Carta/veredicto final al retiro con trayectoria por temporada.
-- Capa visual con imagen de ambiente de F1 y logos externos opcionales para equipos F1 con fallback por sigla/color.
+- Capa visual con imagen de ambiente de F1 y logos oficiales locales para equipos F1, con fallback por sigla/color.
 - Vitrina con trofeos de titulos, podios, sprint/ritmo destacado, adelantada de temporada y aporte a constructores.
 - Celebracion especial cuando el piloto sale campeon.
 
 ## Logica del juego
 
-La carrera empieza a los 16 anos en F3. El jugador elige una identidad y reparte 18 puntos de talento. El estilo de conduccion y la personalidad modifican el perfil inicial.
+La carrera empieza a los 16 años en F3. El jugador elige una identidad y reparte 18 puntos de talento. El estilo de conduccion y la personalidad modifican el perfil inicial.
 
 Cada temporada tiene 3 decisiones o pruebas. Las decisiones pueden:
 
@@ -72,7 +72,7 @@ El juego arma cada temporada eligiendo 3 eventos: uno de pretemporada, uno de fa
 - Pretemporada: preparacion, test, contratos, lluvia, ingenieros y entorno.
 - Primeras fechas: qualy, trafico, callejeros, incidentes, setup y primeros podios.
 - Sprint: DRS, ERS, ordenes de equipo, safety car, companero, motor y gomas.
-- Mitad de ano: desarrollo, ingenieros, rivalidad, manager, simulador F1 y fatiga.
+- Mitad de año: desarrollo, ingenieros, rivalidad, manager, simulador F1 y fatiga.
 - Final: contrato, superlicencia, lluvia, rumor de ascenso, reunion tecnica y asientos libres.
 
 Cada evento tiene 2 o 3 opciones, aunque la mayoria usa 3. Las opciones impactan estadisticas permanentes, rendimiento de temporada, tension con el rival, riesgo o mercado.
