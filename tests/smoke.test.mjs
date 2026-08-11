@@ -12,14 +12,23 @@ async function exists(path) {
 test("assets principales disponibles", async () => {
   await Promise.all([
     exists("assets/brand-helmet.png"),
+    exists("public/assets/brand-helmet.png"),
     exists("assets/paddock-hero.jpg"),
+    exists("public/assets/paddock-hero.jpg"),
     exists("assets/garage-detail.jpg"),
+    exists("public/assets/garage-detail.jpg"),
     exists("assets/trophies/title.png"),
+    exists("public/assets/trophies/title.png"),
     exists("assets/trophies/constructor.png"),
+    exists("public/assets/trophies/constructor.png"),
     exists("assets/trophies/podium.png"),
+    exists("public/assets/trophies/podium.png"),
     exists("assets/trophies/pole.png"),
+    exists("public/assets/trophies/pole.png"),
     exists("assets/trophies/sprint.png"),
+    exists("public/assets/trophies/sprint.png"),
     exists("assets/trophies/honor.png"),
+    exists("public/assets/trophies/honor.png"),
   ]);
 });
 
@@ -38,7 +47,10 @@ test("logos F1 locales disponibles", async () => {
     "cadillac.png",
   ];
 
-  await Promise.all(logos.map((logo) => exists(`assets/teams/${logo}`)));
+  await Promise.all([
+    ...logos.map((logo) => exists(`assets/teams/${logo}`)),
+    ...logos.map((logo) => exists(`public/assets/teams/${logo}`)),
+  ]);
 });
 
 test("entrada principal usa React/Vite y conserva legado", async () => {

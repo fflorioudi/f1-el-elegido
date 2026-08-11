@@ -1,0 +1,134 @@
+[
+  {
+    "slug": "mercedes",
+    "team": "Mercedes",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/mercedes",
+    "asset": "2025mercedeslogowhite"
+  },
+  {
+    "slug": "ferrari",
+    "team": "Ferrari",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/ferrari",
+    "asset": "2025ferrarilogolight"
+  },
+  {
+    "slug": "mclaren",
+    "team": "McLaren",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/mclaren",
+    "asset": "2025mclarenlogowhite"
+  },
+  {
+    "slug": "red-bull-racing",
+    "team": "Red Bull Racing",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/red-bull-racing",
+    "asset": "2025redbullracinglogowhite"
+  },
+  {
+    "slug": "racing-bulls",
+    "team": "Racing Bulls",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/racing-bulls",
+    "asset": "2025racingbullslogowhite"
+  },
+  {
+    "slug": "alpine",
+    "team": "Alpine",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/alpine",
+    "asset": "2025alpinelogowhite"
+  },
+  {
+    "slug": "haas-f1-team",
+    "team": "Haas F1 Team",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/haas",
+    "asset": "2025haaslogowhite"
+  },
+  {
+    "slug": "audi",
+    "team": "Audi",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/audi",
+    "asset": "2026audilogowhite"
+  },
+  {
+    "slug": "williams",
+    "team": "Williams",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/williams",
+    "asset": "2025williamslogowhite"
+  },
+  {
+    "slug": "aston-martin",
+    "team": "Aston Martin",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/aston-martin",
+    "asset": "2025astonmartinlogowhite"
+  },
+  {
+    "slug": "cadillac",
+    "team": "Cadillac",
+    "status": "formula1 official png",
+    "source": "https://www.formula1.com/en/teams/cadillac",
+    "asset": "2026cadillaclogowhite"
+  },
+  {
+    "slug": "campos-racing",
+    "team": "Campos Racing",
+    "status": "local png badge"
+  },
+  {
+    "slug": "trident",
+    "team": "Trident",
+    "status": "local png badge"
+  },
+  {
+    "slug": "mp-motorsport",
+    "team": "MP Motorsport",
+    "status": "local png badge"
+  },
+  {
+    "slug": "art-grand-prix",
+    "team": "ART Grand Prix",
+    "status": "local png badge"
+  },
+  {
+    "slug": "van-amersfoort-racing",
+    "team": "Van Amersfoort Racing",
+    "status": "local png badge"
+  },
+  {
+    "slug": "rodin-motorsport",
+    "team": "Rodin Motorsport",
+    "status": "local png badge"
+  },
+  {
+    "slug": "prema-racing",
+    "team": "PREMA Racing",
+    "status": "local png badge"
+  },
+  {
+    "slug": "hitech",
+    "team": "Hitech",
+    "status": "local png badge"
+  },
+  {
+    "slug": "aix-racing",
+    "team": "AIX Racing",
+    "status": "local png badge"
+  },
+  {
+    "slug": "dams-lucas-oil",
+    "team": "DAMS Lucas Oil",
+    "status": "local png badge"
+  },
+  {
+    "slug": "invicta-racing",
+    "team": "Invicta Racing",
+    "status": "local png badge"
+  }
+]
