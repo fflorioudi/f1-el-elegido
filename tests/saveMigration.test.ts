@@ -30,6 +30,7 @@ test("migracion agrega saveVersion y colecciones nuevas", () => {
   assert.deepEqual(migrated?.categorySeasons, { F3: 0, F2: 0, F1: 0 });
   assert.deepEqual(migrated?.trophies, []);
   assert.deepEqual(migrated?.minigameCounts, {});
+  assert.equal(migrated?.retired, false);
 });
 
 test("serializacion mantiene version actual", () => {

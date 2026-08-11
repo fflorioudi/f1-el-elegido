@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { teamObjects } from "../src/data/catalog";
-import { advanceMoment, chooseMoment, createCareer, getOffers, lockDriveMode, resolveMinigame, signTeam, startSeason } from "../src/engine/career";
+import { chooseMoment, createCareer, getOffers, lockDriveMode, renewalEvaluation, resolveMinigame, signTeam, startSeason } from "../src/engine/career";
 import type { CareerState, DriveModeKey, SetupInput, Team } from "../src/types/game";
 
 const STRONG_DRIVER: SetupInput = {
@@ -75,6 +75,44 @@ describe("balance de categorias y mercado", () => {
     const offers = getOffers(career, false);
     assert.ok(offers.every((team) => team.tier !== "top"));
   });
+
+  test("mercado muestra renovacion cuando el rendimiento sostiene el asiento", () => {
+    let career = createCareer(STRONG_DRIVER);
+    const team = teamObjects("F1").find((item) => item.name === "Alpine")!;
+    career = {
+      ...career,
+      category: "F1",
+      team: null,
+      seasons: 6,
+      categorySeasons: { F3: 2, F2: 2, F1: 2 },
+      marketContext: { category: "F1", currentTeam: team, season: 6 },
+      trajectory: [{
+        season: 6,
+        age: 22,
+        category: "F1",
+        team: team.name,
+        teamCode: team.code,
+        teamColor: team.color,
+        score: 91,
+        driverScore: 90,
+        carExpectation: 84,
+        overperformance: 7,
+        points: 210,
+        wins: 1,
+        podiums: 5,
+        poles: 1,
+        title: 0,
+        licenseGain: 0,
+        decisions: [],
+      }],
+    };
+
+    const renewal = renewalEvaluation(career);
+    const offers = getOffers(career, false);
+
+    assert.equal(renewal.status, "approved");
+    assert.equal(offers[0].name, team.name);
+  });
 });
 
 function playSeason(career: CareerState, mode: DriveModeKey, minigameBonus: number) {
@@ -86,7 +124,6 @@ function playSeason(career: CareerState, mode: DriveModeKey, minigameBonus: numb
     const choiceIndex = bestChoiceIndex(moment.choices);
     next = chooseMoment(next, choiceIndex);
     if (next.season?.pendingMinigame) next = resolveMinigame(next, minigameBonus);
-    else if (next.season) next = advanceMoment(next);
   }
 
   return next;

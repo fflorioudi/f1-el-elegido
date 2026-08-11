@@ -1,6 +1,18 @@
 # El elegido
 
-Prototipo local de carrera de monoplazas inspirado en la estructura de juegos de carrera rapida como El Idolo, Copero, Formuletry y F1 Glory, pero llevado al camino F3 -> F2 -> F1 con decisiones, minijuegos, mercado, rivalidad, vitrina y progresion por temporadas.
+Juego web de carrera de monoplazas inspirado en la estructura de juegos rapidos como El Idolo, Copero, Formuletry y F1 Glory, pero llevado al camino F3 -> F2 -> F1 con decisiones, minijuegos, mercado, rivalidad, vitrina y progresion por temporadas.
+
+La version actual esta cerrada como base **React + Vite + TypeScript**, lista para portfolio local o deploy estatico en Vercel. La version vanilla anterior quedo preservada en `legacy-index.html` solo como referencia historica.
+
+## Estado actual
+
+- Base jugable principal migrada a React/Vite.
+- Motor separado de la UI en `src/engine`.
+- Datos de equipos, perfiles, eventos, assets y trofeos en `src/data`.
+- Estado y guardado local en `src/state`.
+- UI modular en `src/components`, con flujo de carrera separado en `src/components/race`.
+- Minijuegos aislados en `src/components/minigames` con wrapper de compatibilidad.
+- 20 tests automatizados cubriendo assets, mercado, progresion, contratos, retiro, rotacion de minijuegos, render de UI y migracion de guardado.
 
 ## Lenguajes usados
 
@@ -121,6 +133,29 @@ npm run test
 npm run build
 ```
 
+## Deploy en Vercel
+
+No hace falta Next.js para publicar esta version. Vercel soporta Vite directamente:
+
+- Framework Preset: `Vite`
+- Install Command: `npm install`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+Next.js queda como proximo paso posible si el proyecto suma rutas avanzadas, usuarios, guardado online, rankings, API o base de datos.
+
+## Arquitectura preparada para migrar a Next.js
+
+Cuando se migre a Next, el movimiento recomendado es:
+
+- `src/components` -> componentes reutilizables.
+- `src/data` -> catalogos compartidos cliente/servidor.
+- `src/engine` -> logica pura testeable.
+- `src/state` -> hooks cliente o adaptador de persistencia.
+- `assets/` -> `public/assets/`.
+
+La prioridad antes de Next era cerrar esta base sin deuda gruesa: flujo de carrera, contratos, minijuegos, vitrina, retiro, tests y documentacion.
+
 La version anterior se puede abrir desde `legacy-index.html` si queres comparar comportamientos.
 
 ## Documentacion por tema
@@ -135,6 +170,7 @@ La version anterior se puede abrir desde `legacy-index.html` si queres comparar 
 - `README_ANALISIS_EQUIPOS.md`: tiers de F1, mercado, simulaciones y balance de equipos.
 - `README_ANALISIS_REFERENTES.md`: revision de F1 Glory, El Idolo, Copero y Formuletry.
 - `README_MIGRACION.md`: estado de la migracion a React/Vite y proximos cortes.
+- `README_QA_PLAYTEST.md`: validaciones, simulaciones y QA pendiente antes de Next.js.
 
 ## Ideas para proximas versiones
 
@@ -145,6 +181,5 @@ La version anterior se puede abrir desde `legacy-index.html` si queres comparar 
 - Academia de jovenes y sponsors.
 - Carta final descargable como imagen.
 - Balance fino de superlicencia y contratos.
-- Migrar minijuegos interactivos completos del vanilla a componentes React.
-- Agregar tests de balance sobre el motor puro.
-- Evaluar Next.js solo si aparecen perfiles online, ranking, API o base de datos.
+- Separar `src/components/minigames/Games.tsx` en un archivo por minijuego cuando empiece una v0.8 de mantenimiento fino.
+- Evaluar Next.js si aparecen perfiles online, ranking, API o base de datos.

@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { STAT_NAMES } from "../data/catalog";
 import { trophyCounts } from "../engine/career";
 import type { CareerState } from "../types/game";
@@ -8,14 +7,11 @@ export function Sidebar({
   career,
   onSave,
   onReset,
-  onImport,
 }: {
   career: CareerState;
   onSave: () => void;
   onReset: () => void;
-  onImport: (raw: string) => boolean;
 }) {
-  const fileInput = useRef<HTMLInputElement | null>(null);
   const counts = trophyCounts(career);
   const majors = (counts.title || 0) + (counts["constructor"] || 0);
   const honors =
@@ -62,32 +58,7 @@ export function Sidebar({
         ))}
       </div>
       <button type="button" onClick={onSave}>Guardar</button>
-      <button type="button" onClick={() => exportCareer(career)}>Exportar JSON</button>
-      <button type="button" onClick={() => fileInput.current?.click()}>Importar JSON</button>
-      <input
-        ref={fileInput}
-        type="file"
-        accept="application/json,.json"
-        hidden
-        onChange={(event) => importCareer(event.currentTarget.files?.[0] || null, onImport)}
-      />
       <button type="button" onClick={onReset}>Nueva carrera</button>
     </aside>
   );
-}
-
-function exportCareer(career: CareerState) {
-  const blob = new Blob([JSON.stringify(career, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `el-elegido-${career.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "carrera"}.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
-async function importCareer(file: File | null, onImport: (raw: string) => boolean) {
-  if (!file) return;
-  const raw = await file.text();
-  onImport(raw);
 }

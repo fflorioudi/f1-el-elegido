@@ -63,6 +63,7 @@ export function createCareer(input: SetupInput): CareerState {
     pendingCelebrations: [],
     marketContext: null,
     careerDriveMode: null,
+    retired: false,
     season: null,
   };
 }
@@ -78,6 +79,7 @@ function createRival(stats: Stats) {
 }
 
 export function startSeason(state: CareerState): CareerState {
+  if (shouldRetire(state)) return retireCareer(state);
   if (!state.team) return state;
   const selectedMoments = chooseSeasonMoments(state);
   const lockedMode = Boolean(state.careerDriveMode);
@@ -188,13 +190,14 @@ export function chooseMoment(state: CareerState, choiceIndex: number): CareerSta
     decisions: [...next.season!.decisions, record],
     pendingMinigame: moment.minigame || null,
   };
-  return {
+  const nextState = {
     ...next,
     season,
     decisions: [record, ...next.decisions].slice(0, 18),
     seenEventTitles: [moment.title, ...(next.seenEventTitles || []).filter((title) => title !== moment.title)].slice(0, 45),
     minigameHistory: moment.minigame ? [moment.minigame, ...(next.minigameHistory || [])].slice(0, 20) : next.minigameHistory,
   };
+  return moment.minigame ? nextState : advanceMoment(nextState);
 }
 
 export function resolveMinigame(state: CareerState, bonus: number, detail?: string): CareerState {
@@ -342,7 +345,43 @@ function simulateSeason(state: CareerState): CareerState {
     season: null,
   };
   next = maybePromote(next);
-  return next;
+  return shouldRetire(next) ? retireCareer(next) : next;
+}
+
+export function shouldRetire(state: CareerState): boolean {
+  return Boolean(state.retired || state.age >= 36 || state.categorySeasons.F1 >= 15 || state.seasons >= 20);
+}
+
+export function retireCareer(state: CareerState): CareerState {
+  if (state.retired && !state.season) return state;
+  const record: DecisionLog = {
+    season: state.seasons,
+    phase: "Retiro",
+    title: "Carta de legado",
+    text: `La carrera de ${state.name} queda cerrada con ${state.points} puntos, ${state.wins} victorias y ${state.titles} titulos.`,
+    impact: `Legado ${legacyScore(state)} - ${legacyVerdict(state)}`,
+  };
+  return {
+    ...state,
+    retired: true,
+    season: null,
+    team: state.team,
+    marketContext: null,
+    decisions: [record, ...state.decisions.filter((item) => item.phase !== "Retiro")].slice(0, 18),
+  };
+}
+
+export function legacyScore(state: CareerState) {
+  return Math.round(state.points + state.wins * 28 + state.podiums * 9 + state.titles * 160 + state.license * 3);
+}
+
+export function legacyVerdict(state: CareerState) {
+  const score = legacyScore(state);
+  if (score > 1700) return "Leyenda mundial";
+  if (score > 1050) return "Ganador de epoca";
+  if (score > 620) return "Piloto de elite";
+  if (score > 260) return "Profesional respetado";
+  return "Talento que dejo historias";
 }
 
 function developDriver(stats: Stats, result: { wins: number; podiums: number; poles: number; title: number; score: number; overperformance: number; minigameScore: number }, mode: DriveModeKey): Stats {
@@ -416,12 +455,48 @@ function promoteTo(state: CareerState, category: "F2" | "F1", phase: string, tit
 
 export function getOffers(state: CareerState, first = false): Team[] {
   const value = driverValue(state);
-  const renewal = renewalOffer(state, value, first);
+  const renewalInfo = renewalEvaluation(state, value, first);
+  const renewal = renewalInfo.team;
   let pool = teamObjects(state.category).filter((team) => teamEligible(state, team, value, first)).filter((team) => !renewal || team.name !== renewal.name);
   if (pool.length < 3) pool = teamObjects(state.category).sort((a, b) => a.power - b.power).slice(0, state.category === "F1" ? 5 : 7).filter((team) => !renewal || team.name !== renewal.name);
   const transferSlots = renewal ? 2 : 3;
   const transferTeams = pool.sort((a, b) => Math.abs(a.power - value) - Math.abs(b.power - value) + rnd(-4, 4)).slice(0, transferSlots).map((team) => ({ ...team, pressure: rnd(45, 90) }) as Team);
   return renewal ? [renewal, ...transferTeams] : transferTeams;
+}
+
+export function renewalEvaluation(state: CareerState, value = driverValue(state), first = false) {
+  if (first) return { team: null as Team | null, status: "none", message: "Primer contrato: todavia no existe una renovacion posible." };
+  const recent = state.trajectory?.[0];
+  const contextTeam = state.marketContext?.category === state.category ? state.marketContext.currentTeam : null;
+  const inferredTeam = recent?.category === state.category ? teamObjects(state.category).find((team) => team.name === recent.team) || null : null;
+  const current = contextTeam || inferredTeam;
+  if (!current || !recent || recent.team !== current.name) {
+    return { team: null as Team | null, status: "none", message: "No hay equipo actual claro para negociar renovacion." };
+  }
+  const form = recent.score + Math.max(0, recent.overperformance || 0) * 1.4 + recent.title * 10 + recent.wins * 2.5 + recent.podiums * 0.9;
+  const patience = current.tier === "top" ? 82 : current.tier === "mid" ? 74 : 66;
+  const loyalty = state.personality === "Leal" ? 5 : 0;
+  const renewalScore = Math.round(form + loyalty + Math.max(0, value - current.power) * 0.45 - Math.max(0, current.power - value) * 0.35);
+  const gap = renewalScore - patience;
+  if (gap < 0) {
+    const reason = recent.overperformance < 0
+      ? "el auto esperaba mas rendimiento"
+      : current.tier === "top" && !recent.title && recent.wins < 2
+        ? "en un equipo top pedian victorias o pelea real por titulo"
+        : value < current.power - 4
+          ? "tu valor de mercado quedo por debajo del asiento"
+          : "la directiva quiere abrir el mercado";
+    return {
+      team: null as Team | null,
+      status: "rejected",
+      message: `${current.name} no renueva: ${reason}. Evaluacion ${renewalScore}/${patience}.`,
+    };
+  }
+  return {
+    team: current,
+    status: "approved",
+    message: `${current.name} ofrece renovacion: cumpliste el piso deportivo. Evaluacion ${renewalScore}/${patience}.`,
+  };
 }
 
 export function signTeam(state: CareerState, team: Team): CareerState {
@@ -436,18 +511,7 @@ export function signTeam(state: CareerState, team: Team): CareerState {
 }
 
 function renewalOffer(state: CareerState, value: number, first: boolean): Team | null {
-  if (first) return null;
-  const recent = state.trajectory?.[0];
-  const contextTeam = state.marketContext?.category === state.category ? state.marketContext.currentTeam : null;
-  const inferredTeam = recent?.category === state.category ? teamObjects(state.category).find((team) => team.name === recent.team) || null : null;
-  const current = contextTeam || inferredTeam;
-  if (!current || !recent || recent.team !== current.name) return null;
-  const form = recent.score + Math.max(0, recent.overperformance || 0) * 1.4 + recent.title * 10 + recent.wins * 2.5 + recent.podiums * 0.9;
-  const patience = current.tier === "top" ? 82 : current.tier === "mid" ? 74 : 66;
-  const loyalty = state.personality === "Leal" ? 5 : 0;
-  const renewalScore = form + loyalty + Math.max(0, value - current.power) * 0.45 - Math.max(0, current.power - value) * 0.35;
-  if (renewalScore < patience) return null;
-  return current;
+  return renewalEvaluation(state, value, first).team;
 }
 
 function teamEligible(state: CareerState, team: Team, value: number, first: boolean) {

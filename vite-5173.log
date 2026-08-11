@@ -23,3 +23,33 @@
 [2m01:59:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/App.tsx[22m
 [2m01:59:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/App.tsx[22m
 [2m02:00:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx[22m
+[2m02:03:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Celebration.tsx, /src/components/Sidebar.tsx, /src/components/Layout.tsx, /src/components/SetupPanel.tsx, /src/components/RaceControl.tsx, /src/components/ui.tsx, /src/components/App.tsx, /src/components/Minigames.tsx[22m
+[2m02:03:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Celebration.tsx, /src/components/Sidebar.tsx, /src/components/Layout.tsx, /src/components/SetupPanel.tsx, /src/components/RaceControl.tsx, /src/components/ui.tsx, /src/components/App.tsx, /src/components/Minigames.tsx[22m
+[2m02:13:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Sidebar.tsx, /src/components/App.tsx, /src/components/RaceControl.tsx, /src/components/ui.tsx, /src/components/Minigames.tsx[22m
+[2m02:15:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Sidebar.tsx[22m
+[2m02:15:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/App.tsx[22m
+[2m02:15:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/App.tsx[22m
+[2m02:15:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Minigames.tsx[22m
+[2m02:24:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Sidebar.tsx, /src/components/App.tsx, /src/components/RaceControl.tsx, /src/components/ui.tsx, /src/components/Minigames.tsx[22m
+[2m02:24:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/ui.tsx[22m Could not Fast Refresh ("driveModeName" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m02:24:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Sidebar.tsx, /src/components/RaceControl.tsx[22m
+[2m02:24:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/App.tsx[22m
+[2m02:24:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/App.tsx[22m
+[2m02:24:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Sidebar.tsx, /src/components/App.tsx, /src/components/RaceControl.tsx, /src/components/ui.tsx, /src/components/Minigames.tsx[22m
+[2m02:24:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/ui.tsx[22m Could not Fast Refresh ("driveModeName" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m02:24:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Sidebar.tsx, /src/components/RaceControl.tsx[22m
+[2m02:24:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/App.tsx[22m
+[2m02:24:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/RaceControl.tsx[22m
+[2m02:37:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Sidebar.tsx, /src/components/App.tsx, /src/components/RaceControl.tsx, /src/components/ui.tsx, /src/components/Minigames.tsx[22m
+[2m02:37:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/components/ui.tsx[22m Could not Fast Refresh ("driveModeName" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+[2m02:37:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Dashboards.tsx, /src/components/Sidebar.tsx, /src/components/RaceControl.tsx[22m
+[2m02:39:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/RaceControl.tsx[22m
+[2m02:39:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/RaceControl.tsx[22m
+[2m02:40:15[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/RaceControl.tsx[22m
+[2m02:40:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/RaceControl.tsx[22m
+[2m02:41:22[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/react.css[22m
+[2m02:51:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/RaceControl.tsx[22m
+[2m02:51:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/RaceControl.tsx[22m
+[2m02:52:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Minigames.tsx[22m
+[2m02:52:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/components/Minigames.tsx[22m
+[2m02:53:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/react.css[22m

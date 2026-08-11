@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { CareerState, DriveModeKey, SetupInput, Team } from "../types/game";
-import { advanceMoment, chooseMoment, createCareer, lockDriveMode, resolveMinigame, signTeam, startSeason } from "../engine/career";
+import { advanceMoment, chooseMoment, createCareer, lockDriveMode, resolveMinigame, retireCareer, signTeam, startSeason } from "../engine/career";
 import type { CareerActions, ViewKey } from "../components/types";
 import { readCareerSave, SAVE_KEY, serializeCareerSave } from "./saveMigration";
 
@@ -49,12 +49,9 @@ export function useCareer() {
     dismissCelebration() {
       setCareer((current) => current ? { ...current, pendingCelebrations: current.pendingCelebrations.slice(1) } : current);
     },
-    importSave(raw: string) {
-      const imported = readCareerSave(raw);
-      if (!imported) return false;
-      setCareer(imported);
+    retire() {
+      setCareer((current) => (current ? retireCareer(current) : current));
       setView("race");
-      return true;
     },
   }), [career]);
 

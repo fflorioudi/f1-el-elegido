@@ -8,10 +8,11 @@ Se inicio la migracion a React/Vite/TypeScript. La version principal ahora entra
 
 Validaciones agregadas:
 
-- `npm run test`: smoke test de assets, logos F1 y entrada React/legacy.
+- `npm run test`: smoke test de assets, logos F1, entrada React/legacy, balance, contratos, jugabilidad, minijuegos, retiro e interfaz.
 - `npm run build`: TypeScript + build Vite.
+- Auditoria automatizada de 200 carreras sin loops, sin estados colgados y con rotacion de 14 minijuegos.
 
-Riesgo abierto mas importante: los minijuegos React ya tienen interaccion propia, pero necesitan QA visual y ajuste fino uno por uno contra la sensacion del vanilla: ventanas de timing, dificultad por categoria, feedback y mobile.
+Estado actual: los minijuegos React ya tienen interaccion propia y tests de render para todos los tipos. Sigue pendiente QA visual real con clicks de navegador cuando la herramienta de browser automation este disponible.
 
 ## Alcance de la revision
 
@@ -322,8 +323,8 @@ Mejora recomendada:
 
 - Agregar `saveVersion`.
 - Crear migrador por version.
-- Boton `Exportar carrera` para guardar JSON.
-- Boton `Importar carrera` para portfolio/demo.
+- Mantener el guardado automatico en `localStorage` sin exponer import/export JSON en la UI principal.
+- Si en el futuro hace falta compartir partidas, mover import/export a una pantalla de debug o herramientas de desarrollo.
 
 ### P3 - Arquitectura tecnica
 

@@ -38,6 +38,7 @@ export function migrateCareerSave(value: unknown): CareerState | null {
     pendingCelebrations: career.pendingCelebrations || [],
     marketContext: career.marketContext || null,
     careerDriveMode: career.careerDriveMode || null,
+    retired: Boolean(career.retired),
     season: career.season || null,
   };
 }

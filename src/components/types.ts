@@ -13,5 +13,5 @@ export interface CareerActions {
   minigame(bonus: number, detail?: string): void;
   continue(): void;
   dismissCelebration(): void;
-  importSave(raw: string): boolean;
+  retire(): void;
 }

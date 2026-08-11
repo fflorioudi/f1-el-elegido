@@ -1,7 +1,8 @@
-﻿// @ts-nocheck
-// Banco de eventos migrado desde legacyData.ts. Proximo paso: partir por fase y tipar cada evento.
+﻿import type { Choice, Moment } from "../types/game";
 
-export const MOMENT_BANK = [
+// Proximo paso: partir por fase para que el banco sea mas facil de mantener.
+
+export const MOMENT_BANK: Moment[][] = [
   [
   {
     phase: "Pretemporada",
@@ -179,7 +180,7 @@ export const MOMENT_BANK = [
   ]
 ];
 
-export const EXTRA_MOMENTS = [
+export const EXTRA_MOMENTS: Moment[][] = [
   [
     {
       phase: "Pretemporada",
@@ -463,7 +464,7 @@ EXTRA_MOMENTS.forEach((events, index) => {
   MOMENT_BANK[index].push(...events);
 });
 
-export const GENERATED_EVENT_SEEDS = [
+export const GENERATED_EVENT_SEEDS: string[][][] = [
   [
     ["Mapa de motor conservador", "El jefe de ingenieria teme fiabilidad antes del debut.", "Cuidar unidad", "Mapa mixto", "Liberar potencia"],
     ["Sesion con sponsor tecnico", "Un socio trae sensores nuevos para entender frenadas.", "Probar sensores", "Hacer tanda normal", "Priorizar sensaciones"],
@@ -536,7 +537,7 @@ export const GENERATED_EVENT_SEEDS = [
   ]
 ];
 
-export function makeGeneratedEvent(phaseIndex, seed, seedIndex) {
+export function makeGeneratedEvent(phaseIndex: number, seed: string[], seedIndex: number): Moment {
   const phase = ["Pretemporada", "Primeras fechas", "Sprint", "Mitad de año", "Final de temporada"][phaseIndex];
   const minigames = [
     ["focus", "tyres", "radio", "brake", null],
@@ -561,19 +562,20 @@ export function makeGeneratedEvent(phaseIndex, seed, seedIndex) {
     [{ setup: 3 }, { consistency: 2, pressure: -1 }, { pressure: 2, race: 1 }],
     [{ consistency: 4 }, { race: 4, volatility: 2 }, { setup: 2, tyreCare: 2 }]
   ];
-  const event = {
+  const choices = labels.map((label, choiceIndex) => ({
+    label,
+    effect: statSets[phaseIndex][choiceIndex],
+    season: seasonSets[phaseIndex][choiceIndex],
+    note: choiceIndex === 0 ? "Opcion estable con premio moderado." : choiceIndex === 1 ? "Camino tecnico y consistente." : "Mas techo, mas ruido."
+  })) as unknown as Choice[];
+  const event: Moment = {
     phase,
     title,
     text,
     rival: seedIndex % 5 === 0,
-    choices: labels.map((label, choiceIndex) => ({
-      label,
-      effect: statSets[phaseIndex][choiceIndex],
-      season: seasonSets[phaseIndex][choiceIndex],
-      note: choiceIndex === 0 ? "Opcion estable con premio moderado." : choiceIndex === 1 ? "Camino tecnico y consistente." : "Mas techo, mas ruido."
-    }))
+    minigame: game || undefined,
+    choices
   };
-  if (game) event.minigame = game;
   event.choices.forEach((choice, choiceIndex) => {
     if (choiceIndex === 2) choice.risk = 0.22 + phaseIndex * 0.04;
     if (seedIndex % 5 === 0) choice.rival = choiceIndex - 1;
@@ -587,7 +589,7 @@ GENERATED_EVENT_SEEDS.forEach((seeds, phaseIndex) => {
   });
 });
 
-export const TWO_OPTION_EVENT_SEEDS = [
+export const TWO_OPTION_EVENT_SEEDS: string[][][] = [
   [
     ["Ultimatum de academia", "La academia pide exclusividad para seguir apoyandote.", "Aceptar exclusividad", "Mantener libertad"],
     ["Dia de descanso obligatorio", "Tu preparador detecta sobrecarga fisica.", "Descansar", "Forzar entrenamiento"],
@@ -655,3 +657,5 @@ TWO_OPTION_EVENT_SEEDS.forEach((seeds, phaseIndex) => {
     MOMENT_BANK[phaseIndex].push(makeGeneratedEvent(phaseIndex, seed, seedIndex + 40));
   });
 });
+
+

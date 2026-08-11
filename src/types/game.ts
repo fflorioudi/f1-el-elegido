@@ -132,6 +132,7 @@ export interface CareerState {
   pendingCelebrations: Trophy[];
   marketContext: { category: Category; currentTeam: Team; season: number } | null;
   careerDriveMode: DriveModeKey | null;
+  retired: boolean;
   season: SeasonState | null;
 }
 

@@ -8,20 +8,23 @@
 - `game.js`: motor/render vanilla preservado como referencia.
 - `src/main.tsx`: montaje de React.
 - `src/components/App.tsx`: orquestador principal de pantallas.
-- `src/components/Minigames.tsx`: minijuegos React interactivos.
+- `src/components/Minigames.tsx`: wrapper de compatibilidad para minijuegos.
+- `src/components/minigames/Games.tsx`: minijuegos React interactivos.
+- `src/components/race/Panels.tsx`: mercado, renovaciones, modo de manejo, retiro y vitrina final.
 - `src/data/`: catalogos, assets, equipos, perfiles, modos, trofeos y banco de eventos.
 - `src/data/assets.ts`: rutas locales de imagenes principales y trofeos.
-- `src/data/teams.ts`: equipos, logos, tiers y conversion a objetos. Ya no depende de `legacyData.ts`.
+- `src/data/teams.ts`: equipos, logos, tiers y conversion a objetos.
 - `src/data/events.ts`: acceso al banco de momentos.
-- `src/data/driveModes.ts`: modos de manejo. Ya no depende de `legacyData.ts`.
-- `src/data/profile.ts`: nacionalidades, estilos, personalidades y nombres de stats. Ya no depende de `legacyData.ts`.
-- `src/data/trophies.ts`: guia e iconos de trofeos. Ya no depende de `legacyData.ts`.
+- `src/data/eventBank.ts`: banco completo de decisiones/eventos tipado como `Moment[][]`.
+- `src/data/driveModes.ts`: modos de manejo.
+- `src/data/profile.ts`: nacionalidades, estilos, personalidades y nombres de stats.
+- `src/data/trophies.ts`: guia e iconos de trofeos.
 - `src/engine/`: simulacion, mercado, progresion, trofeos y utilidades.
 - `src/state/`: hook de estado y persistencia local.
 - `src/state/saveMigration.ts`: versionado y migracion de partidas guardadas.
 - `src/types/`: contratos TypeScript del juego.
 - `src/styles/react.css`: ajustes especificos de la version React.
-- `tests/`: pruebas de humo para assets y entrada principal.
+- `tests/`: pruebas de humo, balance, contratos, jugabilidad, interfaz, minijuegos y migracion.
 - `assets/`: imagenes locales de ambiente, logos de equipos y trofeos.
 - `README_*.md`: documentacion por modulo de juego y decisiones de diseno.
 
@@ -41,12 +44,13 @@ La version React guarda en `localStorage` bajo `el-elegido-react-save` con `save
 - Conteo de minijuegos para mejorar rotacion.
 
 La version vanilla conserva su propio guardado anterior. No se migran partidas automaticamente todavia.
-
-Desde la sidebar tambien se puede exportar/importar una carrera en JSON.
+La sidebar de React expone solo acciones de jugador: guardar y nueva carrera. Import/export JSON queda fuera de la UI principal para no ensuciar la experiencia.
 
 ## Motor
 
 Cada temporada crea una lista de 3 momentos desde `MOMENT_BANK`: pretemporada, una fase competitiva intermedia y final. Al resolver cada momento se aplican impactos permanentes y modificadores temporales. Al final se calcula score, puntos, victorias, podios, poles, superlicencia, trofeos y posible ascenso.
+
+La carrera se cierra con carta de legado al llegar a edad 36, 15 temporadas de F1 o 20 temporadas totales. Esta barrera evita saves infinitos o loops de mercado/temporada.
 
 El motor ya vive mayormente fuera del DOM en `src/engine/career.ts`. Esto facilita tests de balance y una futura migracion a Next.js si el proyecto pasa a tener backend, perfiles online o rankings.
 
@@ -61,7 +65,11 @@ El header tiene cuatro secciones funcionales:
 
 Durante un minijuego activo, la navegacion a paneles secundarios queda bloqueada para no perder el contexto de la prueba.
 
-Los minijuegos React ya tienen interacciones propias: timing, lectura de linea, gestion de recursos, riesgo, radio, sectores, box crew y duelo. Todavia pueden pulirse contra el comportamiento exacto del vanilla, pero ya no son botones de resultado manual.
+Los minijuegos React ya tienen interacciones propias: timing, lectura de linea, gestion de recursos, riesgo, radio, sectores con timer, box crew y duelo.
+
+El mercado muestra renovaciones como primera opcion cuando el rendimiento lo justifica. Si no hay renovacion, informa el motivo: valor por debajo del asiento, rendimiento menor al auto, exigencia de equipo top o decision de directiva.
+
+La carta de legado muestra vitrina final, copas por categoria, ultimas copas grandes, reconocimientos y trayectoria completa.
 
 ## Validacion
 
@@ -72,17 +80,20 @@ npm run test
 npm run build
 ```
 
-`npm run test` valida assets principales, logos F1 locales, entrada React/legacy, tiers F1, mercado inicial, progresion F3/F2/F1 y migracion de guardado.
+`npm run test` valida assets principales, logos F1 locales, entrada React/legacy, tiers F1, mercado inicial, renovaciones, progresion F3/F2/F1, volumen/variedad del banco de eventos, retiro, anti-loop de decisiones, rotacion de minijuegos, render de todos los minijuegos, interfaz basica y migracion de guardado.
+
+Auditoria manual automatizada reciente: 200 carreras simuladas, sin fallas, maximo 20 temporadas, renovaciones aprobadas/rechazadas presentes y rotacion de 14 minijuegos activa.
 
 `npm run build` ejecuta TypeScript y el build de Vite.
 
 ## Deuda tecnica actual
 
 1. Separar `Minigames.tsx` en un componente por minijuego cuando empiece el pulido fino.
-2. Migrar el banco de eventos fuera de `legacyData.ts` por fase.
-3. Ampliar tests de balance sobre `simulateSeason`, modo agresivo/conservador y rotacion de minijuegos.
-4. Crear export/import JSON para partidas guardadas.
+2. Partir `eventBank.ts` por fase para mantenimiento.
+3. Ampliar tests visuales con navegador cuando el entorno tenga browser automation disponible.
+4. Evaluar un panel de debug separado para import/export JSON si hace falta compartir partidas.
 5. Revisar UX mobile de minijuegos de timing.
+6. Si se migra a Next.js, mantener `engine` y `data` como modulos puros para no mezclar reglas de juego con rutas o componentes server/client.
 
 ## Compatibilidad
 
