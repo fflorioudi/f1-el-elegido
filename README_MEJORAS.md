@@ -2,6 +2,17 @@
 
 Revision tipo QA del estado actual de **El elegido** despues de los cambios de vitrina, logos, mercado, progresion y balance de modos de manejo.
 
+## Actualizacion migracion React
+
+Se inicio la migracion a React/Vite/TypeScript. La version principal ahora entra por `src/main.tsx` y el prototipo vanilla quedo preservado en `legacy-index.html`.
+
+Validaciones agregadas:
+
+- `npm run test`: smoke test de assets, logos F1 y entrada React/legacy.
+- `npm run build`: TypeScript + build Vite.
+
+Riesgo abierto mas importante: los minijuegos React ya tienen interaccion propia, pero necesitan QA visual y ajuste fino uno por uno contra la sensacion del vanilla: ventanas de timing, dificultad por categoria, feedback y mobile.
+
 ## Alcance de la revision
 
 Se reviso el juego desde tres frentes:
@@ -391,6 +402,44 @@ La mejor version para el juego seria esta:
 ## Veredicto actual
 
 El juego ya tiene una identidad clara y un loop entretenido. Lo mejor ahora es dejar de crecer horizontalmente durante una version y pulir profundidad: que cada control tenga funcion, que cada modo tenga una razon real para existir, que cada equipo se sienta diferente y que la vitrina no solo muestre premios, sino que cuente la carrera.
+
+## Pulido pre-migracion aplicado
+
+### UX
+
+- La navegacion secundaria queda bloqueada durante minijuegos activos para no perder contexto ni permitir dobles decisiones.
+- `activeMinigame` se limpia al resolver una prueba y al migrar partidas guardadas viejas.
+- El mercado ahora muestra una nota clara de renovacion disponible o explica por que no hay renovacion.
+- La vitrina mantiene la guia de premios dentro del juego.
+
+### Balance
+
+- `Agresivo` ahora puede generar incidente visible de temporada.
+- El incidente recorta puntos, podios/victorias posibles y bloquea titulo en esa temporada.
+- La trayectoria registra `Incidente: modo agresivo paso factura`.
+- F2 tiene salida por permanencia desde la quinta temporada con base minima para evitar carreras trabadas.
+
+### Validacion nueva
+
+Progresion con buenas decisiones/minijuegos:
+
+- Base 62: maximo F2 5.
+- Base 68: maximo F2 5.
+- Base 76: maximo F2 2.
+
+F1 con piloto base 86:
+
+- Top: siguen peleando titulos.
+- Medios: 0 titulos en muestra Alpine/Audi; puntos mas razonables.
+- Bajos: 0 titulos y puntos comprimidos.
+
+### Documentacion
+
+- `README.md` actualizado a la version actual.
+- `README_TECNICO.md` actualizado con UI, estado y deuda tecnica.
+- `README_PROGRESION_BALANCE.md` actualizado con tiers, modos e incidentes.
+- `README_MINIJUEGOS.md` actualizado con dificultad y rotacion.
+- `README_MIGRACION.md` agregado como hoja de ruta para React/Vite o Next.js.
 
 ## Implementado despues de esta revision
 

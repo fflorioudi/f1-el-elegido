@@ -1,14 +1,15 @@
 # El elegido
 
-Primera version ampliada de un juego de carrera de monoplazas inspirado en la estructura de juegos de carrera rapida como El Idolo y Copero, pero llevado al camino F3 -> F2 -> F1.
+Prototipo local de carrera de monoplazas inspirado en la estructura de juegos de carrera rapida como El Idolo, Copero, Formuletry y F1 Glory, pero llevado al camino F3 -> F2 -> F1 con decisiones, minijuegos, mercado, rivalidad, vitrina y progresion por temporadas.
 
 ## Lenguajes usados
 
-- HTML: estructura de la aplicacion.
-- CSS: interfaz responsive, paneles, barras de estadisticas y minijuegos.
-- JavaScript: motor de carrera, azar, decisiones, progresion, guardado local y eventos.
+- React + TypeScript: nueva base de interfaz, estado de carrera y componentes.
+- Vite: servidor local y build de produccion.
+- CSS: interfaz responsive, paneles, barras de estadisticas, logos, vitrina y minijuegos.
+- JavaScript legacy: version anterior preservada para consulta y comparacion.
 
-No usa frameworks ni backend en esta V1. Se abre directo desde `index.html` en cualquier navegador moderno.
+No usa backend en esta version. La version principal corre con Vite desde `src/main.tsx`. La version vanilla quedo preservada en `legacy-index.html`.
 
 ## Que hice
 
@@ -16,7 +17,7 @@ No usa frameworks ni backend en esta V1. Se abre directo desde `index.html` en c
 - Reparto inicial de puntos entre velocidad, racecraft, neumaticos, feedback y concentracion.
 - Estadisticas generales adicionales: marketing, reputacion, superlicencia, puntos, victorias, podios, poles, titulos y dinero.
 - Parrillas de equipos para F3, F2 y F1 con equipos 2026.
-- Logos simples de equipos generados con codigo, color y sigla.
+- Logos locales para equipos y fallback por sigla/color cuando corresponde.
 - Temporadas divididas en 3 momentos fuertes: preparacion, evento clave y cierre.
 - Banco ampliado a 150 eventos posibles y mas de 400 opciones totales para que carreras largas repitan mucho menos.
 - Decisiones de carrera con recompensas, riesgos y consecuencias visibles.
@@ -41,6 +42,11 @@ No usa frameworks ni backend en esta V1. Se abre directo desde `index.html` en c
 - Capa visual con imagen de ambiente de F1 y logos oficiales locales para equipos F1, con fallback por sigla/color.
 - Vitrina con trofeos de titulos, podios, sprint/ritmo destacado, adelantada de temporada y aporte a constructores.
 - Celebracion especial cuando el piloto sale campeon.
+- Header funcional con secciones: Race Control, Career Lab, Telemetry y Vitrina.
+- Isotipo local de casco en PNG para reemplazar el placeholder `EE`.
+- Guia in-game de trofeos para entender que significa cada premio.
+- Mercado con explicacion de renovacion disponible o ausencia de renovacion.
+- Primer corte de migracion a React/Vite/TypeScript con motor separado en `src/engine`, datos en `src/data`, estado en `src/state` y UI en `src/components`.
 
 ## Logica del juego
 
@@ -60,6 +66,7 @@ Al cerrar la temporada se calcula un resultado con esta idea:
 - La concentracion ayuda a estabilizar el rendimiento.
 - El azar agrega variacion para que no haya dos carreras iguales.
 - Las decisiones y minijuegos acumulan modificadores de temporada.
+- El modo de manejo queda fijado para toda la carrera: Conservador estabiliza, Equilibrado ordena y Agresivo da techo con incidentes posibles.
 
 Despues de cada temporada se actualizan puntos, victorias, podios, poles, reputacion, marketing, dinero y superlicencia. Si el piloto cumple objetivos, sube de categoria. En F1 ya no se suman puntos de superlicencia; se pelea por legado.
 
@@ -85,6 +92,7 @@ La llegada a F1 ya no depende solo de una buena media. Para subir:
 - F2 busca durar 2-3 temporadas y tiene salida practica en 4-5 con superlicencia y media competitiva.
 - Al llegar a F1, los primeros contratos tienden a ser con equipos de fondo o media tabla.
 - Ferrari, Mercedes, McLaren y Red Bull solo aparecen cuando el piloto ya tiene valoracion, reputacion y trayectoria en F1.
+- Los equipos F1 tienen tiers claros: top, medio y bajo. Los top pelean campeonatos; los medios pueden crecer y dar golpes; los bajos apuntan a puntos, podios raros y progresion.
 
 La valoracion de mercado mezcla media del piloto, reputacion, marketing, resultado reciente, victorias, titulos, licencia y penalizacion por falta de experiencia.
 
@@ -99,7 +107,21 @@ La valoracion de mercado mezcla media del piloto, reputacion, marketing, resulta
 
 ## Como ejecutar
 
-Abri `index.html` en el navegador. No hace falta instalar dependencias.
+Instala dependencias y levanta el servidor local:
+
+```bash
+npm install
+npm run dev
+```
+
+Validacion:
+
+```bash
+npm run test
+npm run build
+```
+
+La version anterior se puede abrir desde `legacy-index.html` si queres comparar comportamientos.
 
 ## Documentacion por tema
 
@@ -112,6 +134,7 @@ Abri `index.html` en el navegador. No hace falta instalar dependencias.
 - `README_MEJORAS.md`: analisis del estado actual y roadmap de mejoras.
 - `README_ANALISIS_EQUIPOS.md`: tiers de F1, mercado, simulaciones y balance de equipos.
 - `README_ANALISIS_REFERENTES.md`: revision de F1 Glory, El Idolo, Copero y Formuletry.
+- `README_MIGRACION.md`: estado de la migracion a React/Vite y proximos cortes.
 
 ## Ideas para proximas versiones
 
@@ -122,4 +145,6 @@ Abri `index.html` en el navegador. No hace falta instalar dependencias.
 - Academia de jovenes y sponsors.
 - Carta final descargable como imagen.
 - Balance fino de superlicencia y contratos.
-- Logos oficiales como imagenes locales si se agregan permisos/licencias.
+- Migrar minijuegos interactivos completos del vanilla a componentes React.
+- Agregar tests de balance sobre el motor puro.
+- Evaluar Next.js solo si aparecen perfiles online, ranking, API o base de datos.

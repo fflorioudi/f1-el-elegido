@@ -1,0 +1,32 @@
+#root {
+  min-height: 100vh;
+}
+
+.nav-pills button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+  transform: none;
+}
+
+.status-card strong,
+.brand-mark strong,
+.panel-head h2 {
+  letter-spacing: 0;
+}
+
+.stat-inputs label {
+  gap: 8px;
+}
+
+.stat-inputs strong {
+  color: var(--gold);
+}
+
+.team-badge .logo img + b {
+  display: none;
+}
+
+.choice-grid:empty,
+.timeline:empty {
+  display: none;
+}

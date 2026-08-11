@@ -825,6 +825,14 @@ function navigateHeader(view) {
     $("setup").scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
+  if (state.activeMinigame && view !== "race") {
+    showFeedback("Minijuego activo", "Termina la prueba antes de abrir otro panel. Asi no se pierde el contexto de carrera.", "warn");
+    return;
+  }
+  if (state.activeMinigame && view === "race") {
+    setActiveNav("race");
+    return;
+  }
   if (view === "race") {
     render();
     return;
@@ -854,6 +862,7 @@ function migrateSave() {
   state.pendingCelebrations = state.pendingCelebrations || [];
   state.marketContext = state.marketContext || null;
   state.careerDriveMode = state.careerDriveMode || null;
+  state.activeMinigame = null;
   if (state.season && !state.season.moments) state.season = null;
   if (state.season && state.season.driveModeLocked === undefined) {
     state.season.driveModeLocked = (state.season.moment || 0) > 0;
@@ -1411,6 +1420,7 @@ function renderOffers(first = false) {
   $("careerTitle").textContent = first ? "Elige tu primer equipo" : "Elige tu proximo asiento";
   $("mainCard").innerHTML = `
     <p>${first ? "Tres estructuras miran tu talento. Cada asiento cambia aprendizaje, presion y exposicion." : renewal ? "Tu equipo quiere saber si seguis en el proyecto. Afuera tambien hay llamadas." : "El mercado abre despues de tu temporada. El auto mas fuerte no siempre es el camino mas inteligente."}</p>
+    ${!first ? renewalInsight(renewal, value) : ""}
     ${marketIntel(value, f1Interest, teams)}
   `;
   $("choiceGrid").innerHTML = teams.map((team, index) => `
@@ -1437,6 +1447,21 @@ function renderOffers(first = false) {
       render();
     });
   });
+}
+
+function renewalInsight(renewal, value) {
+  const recent = state.trajectory?.[0];
+  if (renewal) {
+    return `<div class="market-note ok"><strong>Renovacion disponible</strong><span>${renewal.name} confia en tu rendimiento reciente y te ofrece continuidad.</span></div>`;
+  }
+  const teamName = recent?.team || state.marketContext?.currentTeam?.name;
+  if (!teamName) return "";
+  const reason = recent?.score < 76
+    ? "el score reciente no alcanzo el piso del proyecto"
+    : value < (state.marketContext?.currentTeam?.power || recent?.carExpectation || 80) - 4
+      ? "el equipo cree que el auto todavia te queda grande"
+      : "el mercado interno se enfrio por presion, politica o falta de confianza";
+  return `<div class="market-note warn"><strong>Sin renovacion</strong><span>${teamName} no puso continuidad sobre la mesa: ${reason}.</span></div>`;
 }
 
 function renewalOffer(value, first) {
@@ -1737,6 +1762,7 @@ function finishMinigame(title, bonus, text) {
     state.minigameCounts = state.minigameCounts || {};
     state.minigameCounts[state.activeMinigame] = (state.minigameCounts[state.activeMinigame] || 0) + 1;
   }
+  state.activeMinigame = null;
   state.season.minigameScore += bonus;
   state.season.decisions.push({
     season: state.season.number,
@@ -2331,16 +2357,25 @@ function simulateSeason() {
   const f1TitleTax = state.category === "F1" && state.team.tier !== "top" ? (state.team.tier === "mid" ? 8 : 15) : 0;
   const winLine = state.category === "F1" ? 91 + f1CarDeficit * 0.38 + f1RaceTax * 0.42 : state.category === "F2" ? 83 : 80;
   const podiumLine = state.category === "F1" ? 78 + f1CarDeficit * 0.26 + f1RaceTax * 0.25 : state.category === "F2" ? 70 : 66;
-  const wins = Math.max(0, Math.floor((score - winLine) / 7) + (score > winLine + 2 && rnd(0, 100) > 48 ? 1 : 0));
-  const podiums = Math.max(wins, Math.floor((score - podiumLine) / 6) + (score > podiumLine + 2 && rnd(0, 100) > 58 ? 1 : 0));
+  const attackIncidentChance = season.driveMode === "attack"
+    ? clamp(Math.round(5 + volatility * 1.6 + f1AttackTierDrag * 1.8 - Math.max(0, controlRating - 82) * 0.32), 3, 32)
+    : 0;
+  const attackIncident = attackIncidentChance > 0 && rnd(1, 100) <= attackIncidentChance;
+  let wins = Math.max(0, Math.floor((score - winLine) / 7) + (score > winLine + 2 && rnd(0, 100) > 48 ? 1 : 0));
+  let podiums = Math.max(wins, Math.floor((score - podiumLine) / 6) + (score > podiumLine + 2 && rnd(0, 100) > 58 ? 1 : 0));
   let points = Math.max(0, Math.round((score - 49) * (state.category === "F1" ? 5.35 : 3.35)));
+  if (attackIncident) {
+    wins = Math.max(0, wins - 1);
+    podiums = Math.max(wins, podiums - rnd(1, 2));
+    points = Math.max(0, Math.round(points * (state.category === "F1" ? 0.64 : 0.72)));
+  }
   if (state.category === "F1" && state.team.tier !== "top") {
     const tierFactor = state.team.tier === "mid" ? 0.78 : 0.58;
     const overBonus = Math.max(0, overperformance) * (state.team.tier === "mid" ? 2.2 : 1.4);
     points = Math.max(0, Math.round(points * tierFactor + overBonus));
   }
   const titleLine = state.category === "F1" ? 106 + f1CarDeficit * 0.72 + f1TitleTax : state.category === "F2" ? 92 : 89;
-  const title = score + wins * 1.55 + podiums * 0.55 + rnd(-6, 6) > titleLine ? 1 : 0;
+  const title = !attackIncident && score + wins * 1.55 + podiums * 0.55 + rnd(-6, 6) > titleLine ? 1 : 0;
   const poles = Math.max(0, Math.floor((state.stats.pace + mods.qualy * 0.8 + season.minigameScore * 0.4 - 66) / 15));
   const licenseGain = state.category === "F3"
     ? Math.floor(points / 22) + title * 16 + (podiums >= 4 ? 2 : 0)
@@ -2387,7 +2422,10 @@ function simulateSeason() {
     poles,
     title,
     licenseGain,
-    decisions: season.decisions.map((item) => `${item.phase}: ${item.title}`)
+    decisions: [
+      ...season.decisions.map((item) => `${item.phase}: ${item.title}`),
+      ...(attackIncident ? ["Incidente: modo agresivo paso factura"] : [])
+    ]
   });
 
   const earnedTrophies = awardSeasonTrophies({
@@ -2411,8 +2449,8 @@ function simulateSeason() {
     season: season.number,
     phase: "Resultado",
     title: `${season.team.name} - ${points} pts`,
-    text: `${wins} victorias, ${podiums} podios, ${poles} poles${title ? ", campeon" : ""}.`,
-    impact: `Piloto ${Math.round(driverScore)} vs auto ${Math.round(carExpectation)} (${overperformance >= 0 ? "+" : ""}${overperformance}) - Superlicencia +${licenseGain}${earnedTrophies.length ? ` - Trofeos +${earnedTrophies.length}` : ""}`
+    text: `${wins} victorias, ${podiums} podios, ${poles} poles${title ? ", campeon" : ""}${attackIncident ? ". Incidente por exceso de ataque" : ""}.`,
+    impact: `Piloto ${Math.round(driverScore)} vs auto ${Math.round(carExpectation)} (${overperformance >= 0 ? "+" : ""}${overperformance}) - Superlicencia +${licenseGain}${attackIncident ? " - Agresivo penalizado" : ""}${earnedTrophies.length ? ` - Trofeos +${earnedTrophies.length}` : ""}`
   });
 
   if (title) {
@@ -2645,6 +2683,7 @@ function maybePromote() {
       (state.categorySeasons.F2 >= 4 && state.license >= 30 && avg(state.stats) >= 68) ||
       (state.categorySeasons.F2 >= 5 && avg(state.stats) >= 64)
     );
+  const f2LongStayExit = state.category === "F2" && state.categorySeasons.F2 >= 5 && avg(state.stats) >= 62;
   if (state.category === "F3" && ((state.categorySeasons.F3 >= 1 && state.license >= 18 && strongF3) || f3ReadyByTime)) {
     state.category = "F2";
     state.categorySeasons.F2 = state.categorySeasons.F2 || 0;
@@ -2663,8 +2702,8 @@ function maybePromote() {
     state.category === "F2" &&
     state.categorySeasons.F2 >= 1 &&
     (state.license >= 34 || state.categorySeasons.F2 >= 5) &&
-    (strongF2 || f2ReadyByBodyOfWork || f2ReadyByTime) &&
-    avg(state.stats) >= 68 &&
+    (strongF2 || f2ReadyByBodyOfWork || f2ReadyByTime || f2LongStayExit) &&
+    (avg(state.stats) >= 68 || f2LongStayExit) &&
     (state.categorySeasons.F2 >= 2 || (recent?.title && recent?.score >= 89))
   ) {
     state.category = "F1";

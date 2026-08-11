@@ -95,15 +95,23 @@ button:disabled {
   gap: 10px;
 }
 
-.brand-mark span {
+.brand-logo {
   display: grid;
   place-items: center;
-  width: 36px;
+  width: 44px;
   height: 36px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--red), var(--gold));
-  color: white;
-  font-weight: 950;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 209, 102, 0.12), transparent 60%),
+    #0b1015;
+  box-shadow: 0 0 0 1px rgba(255, 209, 102, 0.18), 0 8px 20px rgba(255, 92, 73, 0.16);
+}
+
+.brand-logo img {
+  width: 40px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .brand-mark strong {
@@ -1031,6 +1039,35 @@ input[type="range"] {
   min-height: auto;
   background: rgba(255, 209, 102, 0.07);
   border-color: rgba(255, 209, 102, 0.28);
+}
+
+.market-note {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.market-note strong {
+  color: var(--text);
+}
+
+.market-note span {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.market-note.ok {
+  border-color: rgba(104, 227, 145, 0.56);
+  background: rgba(104, 227, 145, 0.08);
+}
+
+.market-note.warn {
+  border-color: rgba(255, 209, 102, 0.56);
+  background: rgba(255, 209, 102, 0.08);
 }
 
 .big-number {
