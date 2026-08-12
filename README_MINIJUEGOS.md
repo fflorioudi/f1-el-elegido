@@ -13,15 +13,19 @@ Los minijuegos aparecen como pruebas dentro de los 3 momentos de cada temporada.
 - Foco: ritmo cardiaco con aciertos e intentos visibles.
 - Sectores: ordenar sectores con tiempo ajustado.
 - Muros: elegir linea con riesgo probabilistico.
-- Radio: interpretar una orden del ingeniero.
+- Radio: interpretar una orden del ingeniero con timer, cinco respuestas y palabras trampa.
 - Duelo: gestionar gap y grip contra un rival.
 - Frenada: clavar referencia sin bloquear.
 - Curvas enlazadas: mantener balance y grip.
-- Box crew: cambiar cuatro ruedas cuando estan listas.
+- Box crew: cambiar cuatro ruedas cuando estan listas, ahora con botones circulares tipo rueda y menos margen de reaccion.
 
 ## Dificultad
 
 La dificultad sube por temporada y categoria. F2 agrega presion; F1 exige ventanas mas chicas. La idea no es que todo sea perfecto, sino que acertar mejore la temporada y errar no arruine una carrera completa salvo decisiones muy riesgosas.
+
+Radio ahora escala por dificultad reduciendo el tiempo disponible. Tambien mezcla orden real con una palabra trampa: por ejemplo, puede nombrar `BOX` pero pedir sostener pista si el lider no entra.
+
+Box crew tambien subio apenas su presion: las ruedas se habilitan antes, el limite total es menor y apretar temprano sigue trabando una pistola.
 
 La dificultad tambien se ve afectada por el modo de manejo. `Agresivo` aumenta dificultad y puede provocar incidentes de temporada si se combina con mucha volatilidad o poco control.
 

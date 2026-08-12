@@ -2,7 +2,7 @@ import { ASSETS } from "./assets";
 
 export const TROPHY_GUIDE = {
   title: ["Campeonatos", "Titulo de pilotos ganado en F3, F2 o F1."],
-  constructor: ["Constructores", "Aporte decisivo al equipo por titulo o temporada de muchos puntos."],
+  constructor: ["Constructores", "Campeonato o temporada decisiva para que el equipo domine la tabla."],
   podium: ["Podios", "Temporadas donde llegaste al podio y sostuviste domingos fuertes."],
   pole: ["Poles", "Clasificaciones destacadas con ritmo de vuelta rapida."],
   sprint: ["Sprints", "Reconocimiento de ritmo corto: minijuegos fuertes, sprints o varias victorias."],

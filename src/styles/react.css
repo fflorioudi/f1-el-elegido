@@ -190,9 +190,104 @@
   box-shadow: inset 4px 0 0 var(--gold);
 }
 
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.mode-card {
+  min-height: 132px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 16px;
+  text-align: left;
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(135deg, rgba(67, 215, 255, 0.08), transparent 58%),
+    rgba(255, 255, 255, 0.045);
+}
+
+.mode-card.active {
+  border-color: rgba(67, 215, 255, 0.82);
+  box-shadow: inset 0 0 0 1px rgba(67, 215, 255, 0.25), 0 18px 46px rgba(67, 215, 255, 0.08);
+}
+
+.mode-card span {
+  color: var(--cyan);
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.mode-card strong {
+  color: var(--text);
+  font-size: 1.18rem;
+}
+
+.mode-card small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.setup-layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(230px, 320px);
+  gap: 14px;
+}
+
+.setup-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.setup-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.setup-summary {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 209, 102, 0.12), transparent 52%),
+    rgba(17, 22, 27, 0.75);
+}
+
+.setup-summary span {
+  color: var(--cyan);
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.setup-summary strong {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.setup-summary small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.setup-summary b {
+  color: var(--gold);
+}
+
 @media (max-width: 900px) {
   .legacy-trophy-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mode-grid,
+  .setup-layout,
+  .setup-form {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -205,6 +300,8 @@
     position: sticky;
     top: 8px;
     z-index: 20;
+    gap: 10px;
+    margin-bottom: 10px;
   }
 
   .nav-pills {
@@ -219,6 +316,48 @@
   .nav-pills button {
     flex: 0 0 auto;
     min-width: max-content;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 14px 0 12px;
+    gap: 12px;
+  }
+
+  .hero::after {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: 92px;
+    grid-row: 2;
+    opacity: 0.42;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.1rem, 18vw, 5.2rem);
+    line-height: 0.9;
+  }
+
+  .lead {
+    font-size: 0.98rem;
+  }
+
+  .status-card {
+    padding: 14px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .mode-grid {
+    gap: 10px;
+  }
+
+  .mode-card {
+    min-height: 104px;
+    padding: 13px;
   }
 
   .sidebar,
@@ -275,6 +414,19 @@
     grid-template-columns: 28px minmax(0, 1fr) auto;
     border-radius: 8px;
   }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+
+  .stat-inputs {
+    gap: 14px;
+  }
 }
 
 @media (max-width: 420px) {
@@ -297,5 +449,24 @@
   .pill {
     max-width: 100%;
     overflow-wrap: anywhere;
+  }
+
+  .topbar {
+    padding: 8px;
+  }
+
+  .brand-logo {
+    width: 38px;
+    height: 34px;
+  }
+
+  .brand-logo img {
+    width: 34px;
+    height: 30px;
+  }
+
+  .team-choice,
+  .choice {
+    padding: 12px;
   }
 }

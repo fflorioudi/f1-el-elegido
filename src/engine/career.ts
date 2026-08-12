@@ -414,7 +414,7 @@ function awardSeasonTrophies(state: CareerState, result: any): Trophy[] {
   if (result.podiums > 0) trophies.push({ type: "podium", label: `${result.podiums} podios`, season: result.season, team: result.team });
   if (result.minigameScore >= 28 || result.wins >= 3) trophies.push({ type: "sprint", label: "Sprint/ritmo destacado", season: result.season, team: result.team });
   if (result.score >= 94 && (result.overperformance >= 9 || (result.wins === 0 && result.podiums > 1))) trophies.push({ type: "overtake", label: result.overperformance >= 9 ? "Remontada de la temporada" : "Adelantada de la temporada", season: result.season, team: result.team });
-  if (result.points >= (result.category === "F1" ? 260 : 155) || result.title) trophies.push({ type: "constructor", label: "Aporte a constructores", season: result.season, team: result.team });
+  if (result.points >= (result.category === "F1" ? 260 : 155) || result.title) trophies.push({ type: "constructor", label: "Campeon de constructores", season: result.season, team: result.team });
   return trophies;
 }
 

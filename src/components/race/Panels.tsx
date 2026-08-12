@@ -81,7 +81,7 @@ function LegacyTrophyWall({ career }: { career: CareerState }) {
     (counts.honor || 0);
   const cards: Array<{ type: TrophyType | "honor"; label: string; count: number; detail: string }> = [
     { type: "title", label: "Campeonatos", count: counts.title || 0, detail: "Titulos de pilotos" },
-    { type: "constructor", label: "Constructores", count: counts.constructor || 0, detail: "Aporte al equipo" },
+    { type: "constructor", label: "Constructores", count: counts.constructor || 0, detail: "Titulo de equipo" },
     { type: "podium", label: "Podios", count: counts.podium || 0, detail: "Domingos fuertes" },
     { type: "pole", label: "Poles", count: counts.pole || 0, detail: "Sabados perfectos" },
     { type: "sprint", label: "Sprints", count: counts.sprint || 0, detail: "Ritmo corto" },

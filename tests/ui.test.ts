@@ -37,7 +37,7 @@ describe("interfaz migrada", () => {
       retired: true,
       trophies: [
         { type: "title", label: "Campeon F1", season: 3, team: "Ferrari" },
-        { type: "constructor", label: "Aporte a constructores", season: 3, team: "Ferrari" },
+        { type: "constructor", label: "Campeon de constructores", season: 3, team: "Ferrari" },
         { type: "podium", label: "4 podios", season: 3, team: "Ferrari" },
       ],
     } as CareerState;

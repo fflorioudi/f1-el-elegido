@@ -3,6 +3,8 @@ import { DRIVE_MODES } from "../../data/catalog";
 import { clamp, rnd } from "../../engine/utils";
 import { minigameLabel } from "../../engine/career";
 import type { CareerState } from "../../types/game";
+import { RadioGame } from "./RadioGame";
+import { MinigameResult, Shell, useElapsed, useTicker, type MiniProps, type MiniResult, type TimingCopy } from "./shared";
 
 export function MinigamePanel({ career, type, onResolve }: { career: CareerState; type: string; onResolve: (bonus: number, detail?: string) => void }) {
   const difficulty = minigameDifficulty(career, type);
@@ -30,37 +32,6 @@ export function MinigamePanel({ career, type, onResolve }: { career: CareerState
   if (type === "boxcrew") return <BoxCrewGame {...common} />;
 
   return <RadioGame {...common} />;
-}
-
-function Shell({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <>
-      <div className="panel-head">
-        <p className="eyebrow">Minijuego</p>
-        <h2>{title}</h2>
-      </div>
-      <div className="minigame">{children}</div>
-    </>
-  );
-}
-
-function MinigameResult({ title, result, onContinue }: { title: string; result: MiniResult; onContinue: () => void }) {
-  const tone = result.bonus > 0 ? "ok" : result.bonus === 0 ? "warn" : "bad";
-  return (
-    <>
-      <div className="panel-head">
-        <p className="eyebrow">Minijuego</p>
-        <h2>{title}</h2>
-      </div>
-      <div className={`feedback ${tone}`}>
-        <strong>{title}: {result.bonus > 0 ? "bien ejecutado" : result.bonus === 0 ? "neutro" : "error"}</strong>
-        <span>{result.detail}. Consecuencia: rendimiento de temporada {result.bonus > 0 ? "+" : ""}{result.bonus}.</span>
-      </div>
-      <div className="actions">
-        <button type="button" className="primary" onClick={onContinue}>Continuar</button>
-      </div>
-    </>
-  );
 }
 
 function LightsGame({ difficulty, onResolve }: MiniProps) {
@@ -299,28 +270,6 @@ function WallsGame({ difficulty, onResolve }: MiniProps) {
   );
 }
 
-function RadioGame({ onResolve }: MiniProps) {
-  const call = useMemo(() => {
-    const calls = [
-      { text: "Plan B, box opposite, lluvia en 6 minutos", right: "BOX" },
-      { text: "Target plus cero punto dos, no pelees en recta", right: "LIFT" },
-      { text: "Gap libre, modo ataque hasta curva cuatro", right: "PUSH" },
-      { text: "Safety car posible, entra si el lider sigue", right: "BOX" },
-    ];
-    return calls[rnd(0, calls.length - 1)];
-  }, []);
-
-  return (
-    <Shell title="Radio">
-      <h3>Interpreta la orden</h3>
-      <p className="radio-call">{call.text}</p>
-      <div className="duel-buttons">
-        {["BOX", "PUSH", "LIFT"].map((item) => <button key={item} type="button" onClick={() => onResolve(item === call.right ? 7 : -5, item === call.right ? "Orden entendida bajo ruido" : "Interpretaste mal la radio")}>{item}</button>)}
-      </div>
-    </Shell>
-  );
-}
-
 function DuelGame({ onResolve }: MiniProps) {
   const [grip, setGrip] = useState(55);
   const [gap, setGap] = useState(rnd(-8, 8));
@@ -387,7 +336,7 @@ function CornerGame({ onResolve }: MiniProps) {
 }
 
 function BoxCrewGame({ difficulty, onResolve }: MiniProps) {
-  const wheels = useMemo(() => ["FL", "FR", "RL", "RR"].map((name) => ({ name, readyAt: rnd(650, Math.max(900, 1950 - difficulty * 65)) })), [difficulty]);
+  const wheels = useMemo(() => ["FL", "FR", "RL", "RR"].map((name) => ({ name, readyAt: rnd(520, Math.max(760, 1650 - difficulty * 72)) })), [difficulty]);
   const elapsed = useElapsed();
   const [done, setDone] = useState<string[]>([]);
   const [early, setEarly] = useState(false);
@@ -403,7 +352,7 @@ function BoxCrewGame({ difficulty, onResolve }: MiniProps) {
   }
 
   useEffect(() => {
-    const limit = Math.max(3600, 5200 - difficulty * 160);
+    const limit = Math.max(2800, 4300 - difficulty * 155);
     if (elapsed > limit && done.length < 4) onResolve(-5, "La parada quedo incompleta");
   }, [difficulty, done.length, elapsed, onResolve]);
 
@@ -420,47 +369,13 @@ function BoxCrewGame({ difficulty, onResolve }: MiniProps) {
             disabled={done.includes(wheel.name)}
             onClick={() => clickWheel(wheel.name, wheel.readyAt)}
           >
-            {wheel.name}
+            <span>{wheel.name}</span>
           </button>
         ))}
       </div>
       <div className="mini-status"><span>Ruedas {done.length}/4</span><span>{early ? "Una pistola se trabo" : "Sin errores"}</span></div>
     </Shell>
   );
-}
-
-function useTicker(duration: number, mode: "linear" | "sine") {
-  const [position, setPosition] = useState(mode === "sine" ? 50 : 0);
-  useEffect(() => {
-    let frame = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const elapsed = now - start;
-      const value = mode === "sine"
-        ? (Math.sin((elapsed / duration) * Math.PI * 2 - Math.PI / 2) + 1) * 50
-        : clamp((elapsed / duration) * 100, 0, 100);
-      setPosition(value);
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [duration, mode]);
-  return position;
-}
-
-function useElapsed() {
-  const [elapsed, setElapsed] = useState(0);
-  useEffect(() => {
-    let frame = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      setElapsed(now - start);
-      frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, []);
-  return elapsed;
 }
 
 function minigameDifficulty(career: CareerState, type: string) {
@@ -479,23 +394,4 @@ function outcomeText(type: string, bonus: number) {
   if (bonus > 0) return `${label} resuelto con buen rendimiento`;
   if (bonus === 0) return `${label} quedo neutral, sin ganancia clara`;
   return `${label} salio mal bajo presion`;
-}
-
-interface MiniResult {
-  bonus: number;
-  detail: string;
-}
-
-interface MiniProps {
-  difficulty: number;
-  onResolve: (bonus: number, detail?: string) => void;
-}
-
-interface TimingCopy {
-  title: string;
-  text: string;
-  className: string;
-  button: string;
-  good: string;
-  bad: string;
 }

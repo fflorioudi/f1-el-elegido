@@ -2,20 +2,24 @@
 
 ## Archivos
 
-- `index.html`: entrada Vite de la version React.
+- `src/app/layout.tsx`: layout raiz de Next y carga de CSS global.
+- `src/app/page.tsx`: entrada cliente que monta `App`.
 - `legacy-index.html`: version vanilla preservada para comparar y consultar.
 - `styles.css`: base visual heredada y compartida.
 - `game.js`: motor/render vanilla preservado como referencia.
-- `src/main.tsx`: montaje de React.
+- `src/main.tsx`: entrada Vite legacy no usada por Next.
 - `src/components/App.tsx`: orquestador principal de pantallas.
 - `src/components/Minigames.tsx`: wrapper de compatibilidad para minijuegos.
-- `src/components/minigames/Games.tsx`: minijuegos React interactivos.
+- `src/components/minigames/Games.tsx`: orquestador de minijuegos React interactivos.
+- `src/components/minigames/RadioGame.tsx`: radio endurecida con timer, trampas y cinco respuestas.
+- `src/components/minigames/shared.tsx`: shell, resultado y hooks de tiempo para minijuegos.
 - `src/components/race/Panels.tsx`: mercado, renovaciones, modo de manejo, retiro y vitrina final.
 - `src/data/`: catalogos, assets, equipos, perfiles, modos, trofeos y banco de eventos.
 - `src/data/assets.ts`: rutas locales de imagenes principales y trofeos.
 - `src/data/teams.ts`: equipos, logos, tiers y conversion a objetos.
 - `src/data/events.ts`: acceso al banco de momentos.
-- `src/data/eventBank.ts`: banco completo de decisiones/eventos tipado como `Moment[][]`.
+- `src/data/events/`: banco de decisiones separado en base, extras y seeds generados.
+- `src/data/eventBank.ts`: ensamblador de eventos generados y eventos de dos opciones.
 - `src/data/driveModes.ts`: modos de manejo.
 - `src/data/profile.ts`: nacionalidades, estilos, personalidades y nombres de stats.
 - `src/data/trophies.ts`: guia e iconos de trofeos.
@@ -52,7 +56,7 @@ Cada temporada crea una lista de 3 momentos desde `MOMENT_BANK`: pretemporada, u
 
 La carrera se cierra con carta de legado al llegar a edad 36, 15 temporadas de F1 o 20 temporadas totales. Esta barrera evita saves infinitos o loops de mercado/temporada.
 
-El motor ya vive mayormente fuera del DOM en `src/engine/career.ts`. Esto facilita tests de balance y una futura migracion a Next.js si el proyecto pasa a tener backend, perfiles online o rankings.
+El motor vive fuera del DOM en `src/engine/career.ts`. Esto facilita tests de balance y futuras rutas/API de Next si el proyecto pasa a tener backend, perfiles online o rankings.
 
 ## UI actual
 
@@ -84,16 +88,16 @@ npm run build
 
 Auditoria manual automatizada reciente: 200 carreras simuladas, sin fallas, maximo 20 temporadas, renovaciones aprobadas/rechazadas presentes y rotacion de 14 minijuegos activa.
 
-`npm run build` ejecuta TypeScript y el build de Vite.
+`npm run build` ejecuta el build productivo de Next.js.
 
 ## Deuda tecnica actual
 
-1. Separar `Minigames.tsx` en un componente por minijuego cuando empiece el pulido fino.
-2. Partir `eventBank.ts` por fase para mantenimiento.
+1. Separar `Games.tsx` en un componente por familia de minijuego cuando empiece el pulido fino.
+2. Convertir los modos bloqueados del pre-juego en rutas/reglas reales si se suman variantes.
 3. Ampliar tests visuales con navegador cuando el entorno tenga browser automation disponible.
 4. Evaluar un panel de debug separado para import/export JSON si hace falta compartir partidas.
 5. Revisar UX mobile de minijuegos de timing.
-6. Si se migra a Next.js, mantener `engine` y `data` como modulos puros para no mezclar reglas de juego con rutas o componentes server/client.
+6. Preparar metadata, iconos y Open Graph antes de publicar como portfolio.
 
 ## Compatibilidad
 

@@ -6,11 +6,13 @@ import { readCareerSave, SAVE_KEY, serializeCareerSave } from "./saveMigration";
 
 export function useCareer() {
   const [career, setCareer] = useState<CareerState | null>(() => {
+    if (typeof window === "undefined") return null;
     return readCareerSave(localStorage.getItem(SAVE_KEY));
   });
   const [view, setView] = useState<ViewKey>("race");
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (career) localStorage.setItem(SAVE_KEY, serializeCareerSave(career));
   }, [career]);
 
@@ -20,11 +22,14 @@ export function useCareer() {
       setView("race");
     },
     reset() {
+      if (typeof window !== "undefined") {
       localStorage.removeItem(SAVE_KEY);
+      }
       setCareer(null);
       setView("race");
     },
     save() {
+      if (typeof window === "undefined") return;
       if (career) localStorage.setItem(SAVE_KEY, serializeCareerSave(career));
     },
     chooseTeam(team: Team) {

@@ -24,7 +24,7 @@ body {
   min-height: 100vh;
   background:
     linear-gradient(rgba(9, 11, 13, 0.9), rgba(9, 11, 13, 0.96)),
-    url("assets/paddock-hero.jpg") center top / cover fixed,
+    url("/assets/paddock-hero.jpg") center top / cover fixed,
     radial-gradient(circle at 20% 5%, rgba(255, 51, 79, 0.22), transparent 32rem),
     radial-gradient(circle at 90% 10%, rgba(67, 215, 255, 0.16), transparent 26rem),
     linear-gradient(135deg, #090b0d, #11161b 52%, #0b0d10);
@@ -186,7 +186,7 @@ button:disabled {
   border-radius: 8px;
   background:
     linear-gradient(90deg, rgba(11, 13, 16, 0.2), rgba(11, 13, 16, 0.8)),
-    url("assets/garage-detail.jpg") center / cover;
+    url("/assets/garage-detail.jpg") center / cover;
   opacity: 0.58;
   z-index: -1;
 }
@@ -623,6 +623,12 @@ input[type="range"] {
   }
   50% {
     border-color: rgba(67, 215, 255, 0.72);
+  }
+}
+
+@keyframes wheelSpin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -1605,28 +1611,75 @@ input[type="range"] {
 .wheel-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(64px, 1fr));
-  gap: 10px;
+  gap: 14px;
   max-width: 520px;
   margin: 16px 0;
 }
 
 .wheel-grid button {
-  min-height: 72px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: min(92px, 22vw);
+  min-width: 68px;
+  aspect-ratio: 1;
+  min-height: 0;
+  padding: 0;
+  border-radius: 50%;
+  border-color: rgba(255, 255, 255, 0.22);
+  background:
+    radial-gradient(circle at 50% 50%, #202832 0 18%, #0c1116 19% 31%, #2d3640 32% 43%, #090c10 44% 62%, #1b222a 63% 100%);
+  color: var(--text);
   font-weight: 950;
+  box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.04), 0 12px 26px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+}
+
+.wheel-grid button::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  border: 3px dashed rgba(174, 185, 198, 0.26);
+  animation: wheelSpin 1.2s linear infinite;
+}
+
+.wheel-grid button::after {
+  content: "";
+  position: absolute;
+  inset: 38%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d7e1ea, #4d5a66);
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.wheel-grid button span {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(7, 10, 14, 0.72);
+  font-size: 0.82rem;
 }
 
 .wheel-grid button.ready {
   border-color: var(--lime);
-  box-shadow: 0 0 0 2px rgba(185, 255, 82, 0.18);
+  box-shadow: inset 0 0 0 5px rgba(185, 255, 82, 0.1), 0 0 0 3px rgba(185, 255, 82, 0.2), 0 0 24px rgba(185, 255, 82, 0.24);
 }
 
 .wheel-grid button.done {
-  background: rgba(104, 227, 145, 0.18);
+  background:
+    radial-gradient(circle at 50% 50%, #204f36 0 18%, #0c1116 19% 31%, #326349 32% 43%, #090c10 44% 62%, #183124 63% 100%);
 }
 
 .wheel-grid button.early {
   border-color: var(--bad);
-  background: rgba(255, 112, 93, 0.16);
+  background:
+    radial-gradient(circle at 50% 50%, #613025 0 18%, #0c1116 19% 31%, #7b3b32 32% 43%, #090c10 44% 62%, #351a17 63% 100%);
 }
 
 .timeline {

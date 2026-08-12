@@ -53,10 +53,12 @@ test("logos F1 locales disponibles", async () => {
   ]);
 });
 
-test("entrada principal usa React/Vite y conserva legado", async () => {
-  const index = await readFile(join(root, "index.html"), "utf8");
+test("entrada principal usa Next y conserva legado", async () => {
+  const page = await readFile(join(root, "src/app/page.tsx"), "utf8");
+  const layout = await readFile(join(root, "src/app/layout.tsx"), "utf8");
   const legacy = await readFile(join(root, "legacy-index.html"), "utf8");
 
-  assert.match(index, /src\/main\.tsx/);
+  assert.match(page, /components\/App/);
+  assert.match(layout, /styles\.css/);
   assert.match(legacy, /game\.js/);
 });

@@ -9,8 +9,8 @@ describe("banco de eventos", () => {
     const choices = events.flatMap((event) => event.choices);
 
     assert.equal(phases.length, 5);
-    assert.ok(events.length >= 150, `eventos detectados ${events.length}`);
-    assert.ok(choices.length >= 350, `opciones detectadas ${choices.length}`);
+    assert.ok(events.length >= 200, `eventos detectados ${events.length}`);
+    assert.ok(choices.length >= 500, `opciones detectadas ${choices.length}`);
   });
 
   test("mantiene variedad de minijuegos migrados", () => {

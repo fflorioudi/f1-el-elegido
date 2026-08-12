@@ -1,60 +1,54 @@
-# Migracion a React/Vite
+# Migracion a Next.js
 
-Objetivo: llevar **El elegido** desde prototipo vanilla (`legacy-index.html`, `styles.css`, `game.js`) a una base moderna sin perder el juego actual.
+Objetivo: cerrar la version React inicial y dejar **El elegido** listo para crecer como portfolio deployable, con estructura compatible con Next.js y Vercel.
 
 ## Decision tecnica
 
-La base elegida es **React + Vite + TypeScript**.
+La base actual es **Next.js + React + TypeScript**.
 
 Motivos:
 
-- El juego sigue siendo cliente puro.
-- Vite es rapido para portfolio local, GitHub Pages o Vercel.
-- React permite partir la UI en pantallas y componentes.
-- TypeScript ayuda a proteger estado, equipos, eventos, trofeos, mercado y progresion.
+- Mantiene el juego como cliente puro, pero con entrada moderna en `src/app`.
+- Vercel detecta Next de forma nativa y no necesita `outputDirectory`.
+- Permite sumar rutas futuras: pantalla de modos, ranking, perfiles, saves compartibles o API.
+- El motor (`src/engine`) y los datos (`src/data`) quedan desacoplados de la UI.
 
-Next.js queda como paso posterior si aparecen usuarios, rankings online, rutas compartibles, API, base de datos o autenticacion.
+La version vanilla sigue preservada en `legacy-index.html` y `game.js` solo como referencia historica.
 
 ## Estado actual
 
 Hecho:
 
-- Proyecto Vite creado sobre el repo actual.
-- `index.html` convertido en entrada React.
-- Version vanilla preservada en `legacy-index.html`.
-- `src/types/game.ts` creado con tipos principales.
-- Catalogo dividido en `assets.ts`, `teams.ts`, `events.ts`, `driveModes.ts`, `profile.ts` y `trophies.ts`, con `catalog.ts` como agregador.
-- `legacyData.ts` fue eliminado del runtime React.
-- El banco de eventos completo vive ahora en `src/data/eventBank.ts`.
-- Motor principal migrado a `src/engine/career.ts`.
-- Utilidades puras en `src/engine/utils.ts`.
-- Estado y persistencia en `src/state/useCareer.ts`.
-- Guardado versionado en `src/state/saveMigration.ts`.
-- La sidebar conserva solo acciones de jugador: guardar y nueva carrera. Import/export JSON queda fuera de la UI publica.
-- Retiro/cierre de carrera migrado con carta de legado al llegar a edad 36, 15 temporadas F1 o 20 temporadas totales.
-- Carta de legado ampliada con vitrina final, copas grandes, reconocimientos y trayectoria.
-- Mercado con renovacion visible o explicacion de por que el equipo no renueva.
-- UI principal en `src/components/App.tsx`.
-- Componentes separados para layout, setup, sidebar, race control, dashboards, celebracion y minijuegos.
-- `RaceControl.tsx` quedo como orquestador chico; mercado, modo de manejo, retiro, vitrina final y botones de decision viven en `src/components/race/Panels.tsx`.
-- Minijuegos movidos a `src/components/minigames/Games.tsx` con wrapper en `src/components/Minigames.tsx` para conservar imports.
-- Ajustes visuales React en `src/styles/react.css`.
-- Test de humo en `tests/smoke.test.mjs`.
-- Tests TypeScript de balance, contratos, guardado, jugabilidad, exploits, minijuegos e interfaz con `tsx`.
-- `npm run test` y `npm run build` funcionando.
-
-Parcial:
-
-- Los minijuegos ya tienen interaccion React y conservan presion en pruebas criticas como `Sectores`. Todos los tipos migrados renderizan una interfaz propia en tests.
-- El banco de decisiones/eventos ya no depende del legacy y `eventBank.ts` esta tipado como `Moment[][]`. Todavia esta concentrado en un archivo grande; queda partirlo por fase para mantenimiento.
-- La UI esta componetizada, aunque todavia conviene separar mas por carpetas.
-- Siguiente corte natural: partir `src/components/minigames/Games.tsx` por minijuego y `src/data/eventBank.ts` por fase.
-- Falta una validacion visual automatizada con navegador cuando el entorno de browser automation este disponible; por ahora se cubre con render server-side, tests de motor y simulaciones masivas.
+- App Router creado en `src/app/layout.tsx` y `src/app/page.tsx`.
+- `App` corre como componente cliente para sostener `localStorage`, minijuegos y estado interactivo.
+- `useCareer` es seguro para SSR/prerender y no rompe el build de Next.
+- `npm run dev`, `npm run build`, `npm run start` usan Next.
+- `vercel.json` conserva solo install/build command.
+- Vite fue retirado de dependencias y configs activas.
+- Banco de eventos separado en `src/data/events/`:
+  - `base.ts`,
+  - `deepSeeds.ts`,
+  - `extra.ts`,
+  - `generatedSeeds.ts`,
+  - `twoOptionSeeds.ts`.
+- `eventBank.ts` quedo como ensamblador de eventos generados.
+- Banco total actual: 200 eventos y 550 opciones.
+- `RaceControl.tsx` quedo como orquestador chico.
+- Paneles de carrera viven en `src/components/race/Panels.tsx`.
+- Minijuegos conservan jugabilidad React; Radio fue endurecido con timer, cinco opciones y trampas de lectura.
+- Box crew fue ajustado con menos margen de reaccion y ruedas circulares.
+- Pantalla previa mejorada con selector visual de modo, identidad, resumen y reparto de talento.
+- CSS responsive reforzado para hero, topbar, setup, sidebar, vitrina y cards.
+- Assets locales se sirven desde `public/assets`.
+- Tests y build pasan en Next.
 
 ## Estructura actual
 
 ```txt
 src/
+  app/
+    layout.tsx
+    page.tsx
   components/
     App.tsx
     Celebration.tsx
@@ -64,55 +58,27 @@ src/
     RaceControl.tsx
     SetupPanel.tsx
     Sidebar.tsx
-    ui.tsx
+    minigames/
+      Games.tsx
+      RadioGame.tsx
+      shared.tsx
+    race/
+      Panels.tsx
   data/
-    catalog.ts
-    assets.ts
-    driveModes.ts
-    events.ts
+    events/
+      base.ts
+      extra.ts
+      generatedSeeds.ts
+      twoOptionSeeds.ts
     eventBank.ts
-    profile.ts
+    events.ts
     teams.ts
     trophies.ts
   engine/
-    career.ts
-    utils.ts
   state/
-    saveMigration.ts
-    useCareer.ts
   styles/
-    react.css
   types/
-    game.ts
 ```
-
-## Proximo corte recomendado
-
-1. Partir `eventBank.ts` por fase:
-   - `preseasonEvents.ts`,
-   - `earlyEvents.ts`,
-   - `sprintEvents.ts`,
-   - `midSeasonEvents.ts`,
-   - `finalEvents.ts`,
-   - generadores de eventos en archivo separado.
-
-2. Pulir minijuegos uno por uno:
-   - comparar dificultad con vanilla,
-   - ajustar ventanas de timing por F3/F2/F1,
-   - revisar mobile,
-   - agregar feedback visual antes de avanzar.
-
-3. Ampliar tests de balance:
-   - F3 no debe durar mas de 2-3 temporadas en perfiles razonables.
-   - F2 no debe durar mas de 4-5 temporadas en perfiles razonables.
-   - F1 debe diferenciar equipos bajos, medios y top.
-   - Agresivo debe tener techo alto, pero riesgo real.
-   - Conservador debe ser estable, pero con menos techo.
-   - Equilibrado debe ser el baseline sano.
-
-4. Completar persistencia:
-   - compatibilidad con futuras versiones de save,
-   - posible panel de herramientas separado para import/export si se necesita debug o compartir partidas.
 
 ## Comandos
 
@@ -121,14 +87,13 @@ npm install
 npm run dev
 npm run test
 npm run build
+npm run start
 ```
 
-## Criterio de exito
+## Proximo corte recomendado
 
-La migracion esta bien encaminada si el juego nuevo:
-
-- se siente igual o mejor que el actual,
-- no pierde decisiones, trofeos, mercado ni progresion,
-- recupera los minijuegos interactivos completos,
-- puede correr tests de balance,
-- queda listo para portfolio y eventual deploy.
+1. Separar `Games.tsx` en un archivo por familia de minijuegos.
+2. Convertir la pantalla de modos en rutas reales si aparecen nuevos modos.
+3. Agregar QA visual mobile con navegador cuando el entorno lo permita.
+4. Preparar metadata/Open Graph e iconos para portfolio publico.
+5. Evaluar backend solo si hay usuarios reales, ranking, autenticacion o saves online.
