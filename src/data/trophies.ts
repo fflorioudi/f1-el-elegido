@@ -7,7 +7,7 @@ export const TROPHY_GUIDE = {
   pole: ["Poles", "Clasificaciones destacadas con ritmo de vuelta rapida."],
   sprint: ["Sprints", "Reconocimiento de ritmo corto: minijuegos fuertes, sprints o varias victorias."],
   honor: ["Hitos", "Primer podio, primera victoria, rookie destacado o remontada especial."],
-};
+} as const satisfies Record<string, readonly [string, string]>;
 
 export function trophyIcon(type: string) {
   if (type === "constructor") return ASSETS.trophies.constructor;

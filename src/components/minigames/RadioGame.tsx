@@ -85,7 +85,7 @@ export function RadioGame({ difficulty, onResolve }: MiniProps) {
       return;
     }
     if (option === call.trap) {
-      onResolve(-7, "Caíste en la palabra trampa de la radio");
+      onResolve(-7, "Caiste en la palabra trampa de la radio");
       return;
     }
     onResolve(-4, "Interpretaste la prioridad equivocada del mensaje");
@@ -96,7 +96,7 @@ export function RadioGame({ difficulty, onResolve }: MiniProps) {
       <h3>Radio bajo ruido</h3>
       <p>Lee la prioridad real. Hay palabras trampa y la orden vence rapido.</p>
       <div className="timer"><span style={{ width: `${timeLeft * 100}%` }} /></div>
-      <p className="radio-call"><strong>{call.context}</strong>{call.text}</p>
+      <p className="radio-call"><strong>{call.context}</strong><span>{call.text}</span></p>
       <div className="mini-status">
         <span>Tiempo {Math.ceil(Math.max(0, limit - elapsed) / 1000)}s</span>
         <span>Opciones {RADIO_OPTIONS.length}</span>

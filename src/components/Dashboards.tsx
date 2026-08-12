@@ -1,4 +1,5 @@
-import { DRIVE_MODES, TROPHY_GUIDE, trophyIcon } from "../data/catalog";
+import { DRIVE_MODES } from "../data/catalog";
+import { TROPHY_GUIDE, trophyIcon } from "../data/trophies";
 import { driverValue, f1InterestScore, trophyCounts } from "../engine/career";
 import type { CareerState } from "../types/game";
 import { DriverCard, Info, Panel, driveModeName, f1MarketLine, promotionHint } from "./ui";
@@ -49,15 +50,18 @@ export function Telemetry({ career }: { career: CareerState }) {
 
 export function TrophyGuide({ career }: { career: CareerState }) {
   const counts = trophyCounts(career);
-  const guideCounts = {
-    ...counts,
+  const guideCounts = Object.assign(Object.create(null), counts, {
     honor: (counts.overtake || 0) + (counts.firstWin || 0) + (counts.firstPodium || 0) + (counts.rookie || 0),
-  } as Record<string, number>;
+  }) as Record<string, number>;
+  const guideEntries = Object.entries(TROPHY_GUIDE).map(([type, entry]) => {
+    const [label, description] = entry;
+    return { type, label: String(label), description: String(description) };
+  });
 
   return (
     <Panel stage="Vitrina" title="Trofeos y significado">
       <div className="trophy-guide">
-        {Object.entries(TROPHY_GUIDE).map(([type, [label, description]]: any) => (
+        {guideEntries.map(({ type, label, description }) => (
           <article className="trophy-guide-card" key={type}>
             <img src={trophyIcon(type)} alt="" />
             <div>

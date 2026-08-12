@@ -9,7 +9,7 @@ import { SetupPanel } from "./SetupPanel";
 import { Sidebar } from "./Sidebar";
 
 export function App() {
-  const { career, view, setView, actions } = useCareer();
+  const { career, view, setView, actions, hydrated } = useCareer();
 
   useEffect(() => {
     if (career && shouldRetire(career) && !career.retired) actions.retire();
@@ -23,7 +23,14 @@ export function App() {
       <Topbar view={view} disabled={navDisabled} onChange={setView} />
       <Hero career={career} />
 
-      {!career ? (
+      {!hydrated ? (
+        <section className="panel boot-panel" aria-live="polite">
+          <div className="panel-head">
+            <p className="eyebrow">Garage</p>
+            <h2>Cargando carrera</h2>
+          </div>
+        </section>
+      ) : !career ? (
         <SetupPanel onStart={actions.start} />
       ) : (
         <section id="game" className="game">

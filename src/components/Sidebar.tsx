@@ -22,6 +22,9 @@ export function Sidebar({
     (counts.firstWin || 0) +
     (counts.firstPodium || 0) +
     (counts.rookie || 0);
+  const average = Math.round(
+    Object.values(career.stats).reduce((total, value) => total + value, 0) / Object.values(career.stats).length
+  );
 
   return (
     <aside className="sidebar">
@@ -43,6 +46,11 @@ export function Sidebar({
           <TrophyMini label="Hitos" count={honors - (counts.podium || 0) - (counts.pole || 0) - (counts.sprint || 0)} type="honor" />
         </div>
         <p className="trophy-note">{majors ? `${majors} copas mayores ganadas` : "Las copas grandes esperan su temporada."}</p>
+      </div>
+      <div className="mobile-driver-summary" aria-label="Resumen del piloto">
+        <span>Media <strong>{average}</strong></span>
+        <span>Licencia <strong>{career.license}</strong></span>
+        <span>Trofeos <strong>{career.trophies.length}</strong></span>
       </div>
       <div className="stats-panel">
         {Object.entries(STAT_NAMES).map(([key, label]) => (

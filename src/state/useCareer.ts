@@ -5,16 +5,20 @@ import type { CareerActions, ViewKey } from "../components/types";
 import { readCareerSave, SAVE_KEY, serializeCareerSave } from "./saveMigration";
 
 export function useCareer() {
-  const [career, setCareer] = useState<CareerState | null>(() => {
-    if (typeof window === "undefined") return null;
-    return readCareerSave(localStorage.getItem(SAVE_KEY));
-  });
+  const [career, setCareer] = useState<CareerState | null>(null);
   const [view, setView] = useState<ViewKey>("race");
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    setCareer(readCareerSave(localStorage.getItem(SAVE_KEY)));
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !hydrated) return;
     if (career) localStorage.setItem(SAVE_KEY, serializeCareerSave(career));
-  }, [career]);
+  }, [career, hydrated]);
 
   const actions = useMemo<CareerActions>(() => ({
     start(input: SetupInput) {
@@ -60,5 +64,5 @@ export function useCareer() {
     },
   }), [career]);
 
-  return { career, setCareer, view, setView, actions };
+  return { career, setCareer, view, setView, actions, hydrated };
 }
